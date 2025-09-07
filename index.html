@@ -1,313 +1,448 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Rotex Forex Calculator</title>
-  <style>
-    *{box-sizing:border-box;margin:0;padding:0}
-    body{
-      font-family:Arial,Helvetica,sans-serif;
-      background:black;
-      color:#fff;
-      padding:18px;
-    }
-    header h1{
-      text-align:center;
-      margin-bottom:16px;
-      font-size:2em;
-      background: linear-gradient(135deg, rgb(74,234,220) 0%, rgb(151,120,209) 20%, rgb(207,42,186) 40%, rgb(238,44,130) 60%, rgb(251,105,98) 80%, rgb(254,248,76) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    .container{
-      display:flex;
-      gap:16px;
-      flex-wrap:wrap;
-      /* flex-direction: column; */
-      justify-content: space-evenly;
-      
-    }
-    .formulaBox{
-      background: rgba(255,255,255,0.05);
-      backdrop-filter: blur(12px);
-      width:420px;
-      min-width:300px;
-      height: fit-content;
-      border:1px solid rgba(255,255,255,0.2);
-      border-radius:12px;
-      padding:14px;
-      box-shadow:0 8px 20px rgba(255,255,255,0.05);
-    }
-    .formulaBox h3{
-      font-size:1.3em;
-      margin-bottom:8px;
-      color: transparent;
-      background: linear-gradient(135deg, rgb(74,234,220) 0%, rgb(151,120,209) 20%, rgb(207,42,186) 40%, rgb(238,44,130) 60%, rgb(251,105,98) 80%, rgb(254,248,76) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    label{
-      display:block;
-      margin-top:8px;
-      font-size:13px;
-    }
-    input, select, button{
-      margin-top:6px;
-      padding:8px 10px;
-      width:100%;
-      border:1px solid rgba(255,255,255,0.3);
-      border-radius:6px;
-      font-size:14px;
-      background: rgba(255,255,255,0.05);
-      color:#fff;
-    }
-    input::placeholder{
-      color: rgba(255,255,255,0.6);
-    }
-    button{
-      background:#0077cc;
-      color:#fff;
-      border:none;
-      cursor:pointer;
-    }
-    button:hover{
-      background:#005fa3;
-    }
-    .result{
-      margin-top:12px;
-      padding:8px;
-      background: rgba(255,255,255,0.05);
-      border-radius:6px;
-      border:1px solid rgba(255,255,255,0.2);
-      font-weight:600;
-    }
-    .small{
-      font-size:12px;
-      color:rgba(255,255,255,0.6);
-      margin-top:6px;
-    }
-    .formulaText{
-      font-size:13px;
-      color:rgba(255,255,255,0.8);
-      margin-top:8px;
-      font-style:italic;
-    }
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Rotex Forex Calculator</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:black;
+    color:#fff;
+    padding:18px;
+  }
+  header h1{
+    text-align:center;
+    margin-bottom:16px;
+    font-size:2em;
+    background: linear-gradient(135deg, rgb(74,234,220) 0%, rgb(151,120,209) 20%, rgb(207,42,186) 40%, rgb(238,44,130) 60%, rgb(251,105,98) 80%, rgb(254,248,76) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .container{
+    display:flex;
+    gap:30px;
+    flex-wrap:wrap;
+    justify-content: space-evenly;
+  }
+  .formulaBox{
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(12px);
+    width:420px;
+    min-width:300px;
+    height: fit-content;
+    border:1px solid rgba(255,255,255,0.2);
+    border-radius:12px;
+    padding:14px;
+    box-shadow:0 8px 20px rgba(255,255,255,0.05);
+  }
+  .formulaBox h3{
+    font-size:1.3em;
+    margin-bottom:8px;
+    color: transparent;
+    background: linear-gradient(135deg, rgb(74,234,220) 0%, rgb(151,120,209) 20%, rgb(207,42,186) 40%, rgb(238,44,130) 60%, rgb(251,105,98) 80%, rgb(254,248,76) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  label{
+    display:block;
+    margin-top:8px;
+    font-size:13px;
+  }
+  input, select{
+    margin-top:6px;
+    padding:8px 10px;
+    width:100%;
+    border:1px solid rgba(255,255,255,0.3);
+    border-radius:6px;
+    font-size:14px;
+    background: rgba(255,255,255,0.05);
+    color:#fff;
+  }
+  input::placeholder{
+    color: rgba(255,255,255,0.6);
+  }
+  .result{
+    margin-top:12px;
+    padding:8px;
+    background: rgba(255,255,255,0.05);
+    border-radius:6px;
+    border:1px solid rgba(255,255,255,0.2);
+    font-weight:600;
+  }
+  .small{
+    font-size:12px;
+    color:rgba(255,255,255,0.6);
+    margin-top:6px;
+  }
+  .formulaText{
+    font-size:13px;
+    color:rgba(255,255,255,0.8);
+    margin-top:8px;
+    font-style:italic;
+  }
+  footer>p{
+    margin: 20px;
+    color: gray;
+  }
+</style>
 </head>
 <body>
-  <header><h1>ROTEX FOREX CALCULATOR</h1></header>
+<header><h1>ROTEX FOREX CALCULATOR</h1></header>
 
-  <main>
-    <div class="container">
+<main>
+<div class="container">
 
-      <!-- Pip Difference -->
-      <div class="formulaBox">
-        <h3>Pip Difference</h3>
-        <label>Pair (e.g. EURUSD)</label>
-        <input id="pipPair" placeholder="EURUSD" value="EURUSD">
-        <label>Opening Price</label>
-        <input id="pipOpen" type="number" step="0.00001">
-        <label>Closing Price</label>
-        <input id="pipClose" type="number" step="0.00001">
-        <button onclick="calcPipDiff()">Calculate</button>
-        <div class="result" id="pipDiffResult">Pip Difference: -</div>
-        <div class="small">Note: JPY pairs use pip = 0.01; other pairs use pip = 0.0001.</div>
-      </div>
+  <!-- Pip Difference -->
+  <div class="formulaBox">
+    <h3>Pip Difference</h3>
+    <label>Pair (e.g. EURUSD)</label>
+    <input id="pipPair" placeholder="EURUSD" value="EURUSD">
+    <label>Opening Price</label>
+    <input id="pipOpen" type="number" step="0.00001">
+    <label>Closing Price</label>
+    <input id="pipClose" type="number" step="0.00001">
+    <div class="result" id="pipDiffResult">Pip Difference: -</div>
+    <div class="small">Note: JPY pairs use pip = 0.01; other pairs use pip = 0.0001.</div>
+  </div>
 
-      <!-- Margin Calculator -->
-      <div class="formulaBox">
-        <h3>Forex Margin Calculator</h3>
-        <label>Pair (BASEQUOTE, e.g. AUDCAD or NZDUSD)</label>
-        <input id="pair" placeholder="Enter Currency Pair eg: USDAUD" value="">
-        <label>Lot Type</label>
-        <select id="lotType">
-          <option value="standard">Standard (100,000)</option>
-          <option value="mini">Mini (10,000)</option>
-          <option value="micro">Micro (1,000)</option>
-        </select>
-        <label>Lots</label>
-        <input id="lots" type="number" step="0.01" value="1">
-        <label>Current Market Price</label>
-        <input id="price" type="number" step="0.00001" value="">
-        <label>Leverage (enter 100 for 1:100)</label>
-        <input id="leverage" type="number" step="1" value="100">
-        <label>Cross Rate (ONLY if pair is non-USD): enter <strong>1 USDtoQUOTE</strong> (e.g. USDCAD = 1.38104)</label>
-        <input id="crossRate" type="number" step="0.00001" placeholder="e.g. 1.38104">
-        <label>Account Equity (USD)</label>
-        <input id="equity" type="number" step="0.01" value="1000">
-        <button onclick="calculateMargin()">Calculate Margin</button>
-        <div class="formulaText" id="marginFormula">Formula: -</div>
-        <div class="result" id="marginInQuoteResult">Margin (quote currency): -</div>
-        <div class="result" id="marginUSDResult">Margin (USD): -</div>
-        <div class="result" id="blockedResult">Blocked Margin (USD): -</div>
-        <div class="result" id="marginLevelResult">Margin Level %: -</div>
-      </div>
+  <!-- Margin Calculator -->
+  <div class="formulaBox">
+    <h3>Forex Margin Calculator</h3>
+    <label>Pair (BASEQUOTE, e.g. AUDCAD)</label>
+    <input id="pair" placeholder="AUDCAD" value="AUDCAD">
+    <label>Lot Type</label>
+    <select id="lotType">
+      <option value="standard">Standard (100,000)</option>
+      <option value="mini">Mini (10,000)</option>
+      <option value="micro">Micro (1,000)</option>
+    </select>
+    <label>Lots</label>
+    <input id="lots" type="number" step="0.01" value="1">
+    <label>Current Market Price</label>
+    <input id="price" type="number" step="0.00001" value="">
+    <label>Leverage (enter 100 for 1:100)</label>
+    <input id="leverage" type="number" step="1" value="100">
+    <label>Cross Rate (ONLY if pair is non-USD): enter 1 USDtoQUOTE</label>
+    <input id="crossRate" type="number" step="0.00001" placeholder="e.g. 1.38104">
+    <label>Account Equity (USD)</label>
+    <input id="equity" type="number" step="0.01" value="1000">
+    <div class="formulaText" id="marginFormula">Formula: -</div>
+    <div class="result" id="marginInQuoteResult">Margin (quote currency): -</div>
+    <div class="result" id="marginUSDResult">Margin (USD): -</div>
+    <div class="result" id="blockedResult">Blocked Margin (USD): -</div>
+    <div class="result" id="marginLevelResult">Margin Level %: -</div>
+  </div>
 
-      <!-- Pip Value & Spread Cost -->
-      <div class="formulaBox">
-        <h3>Pip Value & Spread Cost</h3>
-        <label>Pair</label>
-        <input id="pvPair" placeholder="AUDCAD" value="AUDCAD">
-        <label>Lot Type</label>
-        <select id="pvLot">
-          <option value="standard">Standard</option>
-          <option value="mini">Mini</option>
-          <option value="micro">Micro</option>
-        </select>
-        <label>Price</label>
-        <input id="pvPrice" type="number" step="0.00001" value="">
-        <label>Cross Rate (if non-USD; enter USDtoQUOTE e.g. USDCAD = 1.38104)</label>
-        <input id="pvCross" type="number" step="0.00001" placeholder="e.g. 1.38104">
-        <label>Spread (pips)</label>
-        <input id="pvSpread" type="number" step="0.01" value="">
-        <label>Lots (for spread cost)</label>
-        <input id="pvSpreadLots" type="number" step="0.01" value="1">
-        <button onclick="calculatePipAndSpread()">Calc Pip Value & Spread Cost</button>
-        <div class="result" id="pipValueResult">Pip value (1 lot in USD): -</div>
-        <div class="result" id="spreadCostResult">Spread cost (USD): -</div>
-      </div>
+  <!-- Pip Value & Spread Cost -->
+  <div class="formulaBox">
+    <h3>Pip Value & Spread Cost</h3>
+    <label>Pair</label>
+    <input id="pvPair" placeholder="AUDCAD" value="AUDCAD">
+    <label>Lot Type</label>
+    <select id="pvLot">
+      <option value="standard">Standard</option>
+      <option value="mini">Mini</option>
+      <option value="micro">Micro</option>
+    </select>
+    <label>Price</label>
+    <input id="pvPrice" type="number" step="0.00001" value="">
+    <label>Cross Rate (if non-USD)</label>
+    <input id="pvCross" type="number" step="0.00001" placeholder="e.g. 1.38104">
+    <label>Spread (pips)</label>
+    <input id="pvSpread" type="number" step="0.01" value="">
+    <label>Lots (for spread cost)</label>
+    <input id="pvSpreadLots" type="number" step="0.01" value="1">
+    <div class="result" id="pipValueResult">Pip value (1 lot in USD): -</div>
+    <div class="result" id="spreadCostResult">Spread cost (USD): -</div>
+  </div>
 
-      <!-- Profit/Loss -->
-      <div class="formulaBox">
-        <h3>Profit / Loss (USD)</h3>
-        <label>Pair</label>
-        <input id="plPair" placeholder="AUDCAD" value="AUDCAD">
-        <label>Lot Type</label>
-        <select id="plLotType">
-          <option value="standard">Standard</option>
-          <option value="mini">Mini</option>
-          <option value="micro">Micro</option>
-        </select>
-        <label>Lots</label>
-        <input id="plLots" type="number" step="0.01" value="1">
-        <label>Open Price</label>
-        <input id="plOpen" type="number" step="0.00001">
-        <label>Close Price</label>
-        <input id="plClose" type="number" step="0.00001">
-        <label>Trade Type</label>
-        <select id="plType">
-          <option value="buy">Buy (Long)</option>
-          <option value="sell">Sell (Short)</option>
-        </select>
-        <label>Cross Rate (if non-USD; enter USD to QUOTE e.g. USDCAD = 1.38104)</label>
-        <input id="plCross" type="number" step="0.00001" placeholder="e.g. 1.38104">
-        <button onclick="calculatePL()">Calculate P/L (USD)</button>
-        <div class="result" id="plResult">Profit/Loss (USD): -</div>
-      </div>
+  <!-- Profit/Loss -->
+  <div class="formulaBox">
+    <h3>Profit / Loss (USD)</h3>
+    <label>Pair</label>
+    <input id="plPair" placeholder="AUDCAD" value="AUDCAD">
+    <label>Lot Type</label>
+    <select id="plLotType">
+      <option value="standard">Standard</option>
+      <option value="mini">Mini</option>
+      <option value="micro">Micro</option>
+    </select>
+    <label>Lots</label>
+    <input id="plLots" type="number" step="0.01" value="1">
+    <label>Open Price</label>
+    <input id="plOpen" type="number" step="0.00001">
+    <label>Close Price</label>
+    <input id="plClose" type="number" step="0.00001">
+    <label>Trade Type</label>
+    <select id="plType">
+      <option value="buy">Buy (Long)</option>
+      <option value="sell">Sell (Short)</option>
+    </select>
+    <label>Cross Rate (if non-USD)</label>
+    <input id="plCross" type="number" step="0.00001" placeholder="e.g. 1.38104">
+    <div class="result" id="plResult">Profit/Loss (USD): -</div>
+  </div>
 
-    </div>
-  </main>
+</div>
+</main>
+<footer>
+  <p align="center">Built by 4noris</p>
+</footer>
+<script>
+function detectPipSize(pair){return pair.toUpperCase().includes("JPY")?0.01:0.0001;}
+function contractSize(lot){return lot==='standard'?100000:lot==='mini'?10000:1000;}
 
-  <script>
-    // helpers
-    function detectPipSize(pair){ return pair.toUpperCase().includes("JPY") ? 0.01 : 0.0001; }
-    function contractSize(lotType){ return lotType==='standard'?100000:lotType==='mini'?10000:1000; }
+function updateAll(){
+  calcPipDiff(); calculateMargin(); calculatePipAndSpread(); calculatePL();
+}
 
-    // Pip Difference
-    function calcPipDiff(){
-      const p1=parseFloat(document.getElementById('pipOpen').value);
-      const p2=parseFloat(document.getElementById('pipClose').value);
-      const pair=(document.getElementById('pipPair').value||'').toUpperCase();
-      const out=document.getElementById('pipDiffResult');
-      if(isNaN(p1)||isNaN(p2)){out.innerText='⚠️ Enter both prices';return;}
-      const pip=detectPipSize(pair);
-      const pips=Math.abs(p2-p1)/pip;
-      out.innerText=`Pip Difference: ${pips.toFixed(2)} pips (pip size ${pip})`;
+// Pip Difference
+function calcPipDiff(){
+  const p1=parseFloat(document.getElementById('pipOpen').value);
+  const p2=parseFloat(document.getElementById('pipClose').value);
+  const pair=document.getElementById('pipPair').value||'';
+  const out=document.getElementById('pipDiffResult');
+  if(isNaN(p1)||isNaN(p2)){out.innerText='⚠️ Enter both prices';return;}
+  const pip=detectPipSize(pair);
+  const pips=(p2-p1)/pip;
+  out.innerText=`Pip Difference: ${pips.toFixed(2)} pips (pip size ${pip})`;
+}
+
+// Margin Calculator
+function calculateMargin() {
+  const pair = (document.getElementById('pair').value || '').toUpperCase();
+  const lotType = document.getElementById('lotType').value;
+  const lots = parseFloat(document.getElementById('lots').value);
+  const price = parseFloat(document.getElementById('price').value);
+  const leverage = parseFloat(document.getElementById('leverage').value);
+  const crossRate = parseFloat(document.getElementById('crossRate').value);
+  const equity = parseFloat(document.getElementById('equity').value);
+
+  const formulaEl = document.getElementById('marginFormula');
+  const inQuoteEl = document.getElementById('marginInQuoteResult');
+  const usdEl = document.getElementById('marginUSDResult');
+  const blockedEl = document.getElementById('blockedResult');
+  const mlEl = document.getElementById('marginLevelResult');
+
+  if (!pair || pair.length < 6 || isNaN(lots) || isNaN(price) || isNaN(leverage) || lots <= 0 || leverage <= 0) {
+    formulaEl.innerText = 'Formula: -';
+    inQuoteEl.innerText = '-';
+    usdEl.innerText = '-';
+    blockedEl.innerText = '-';
+    mlEl.innerText = '-';
+    return;
+  }
+
+  const base = pair.slice(0, 3);
+  const quote = pair.slice(3);
+  const contract = contractSize(lotType);
+  let marginInQuote = null, marginUSD = null, formulaText = '';
+
+  if (quote === 'USD') {
+    // USD is the quote → margin directly in USD
+    marginUSD = (lots * contract * price) / leverage;
+    marginInQuote = marginUSD;
+    formulaText = '((lots*contract*price)/leverage) — USD quote';
+  } 
+  else if (base === 'USD') {
+    // USD is the base → margin initially in base, then convert to USD
+    marginInQuote = (lots * contract) / leverage;
+    marginUSD = marginInQuote * price;
+    formulaText = '((lots*contract)/leverage)*price — USD base';
+  } 
+  else {
+    // Non-USD pair → requires cross rate
+    marginInQuote = (lots * contract * price) / leverage;
+    if (!crossRate || crossRate <= 0) {
+      formulaEl.innerText = 'Formula: Convert using cross rate';
+      inQuoteEl.innerText = `Margin (${quote}): ${marginInQuote.toFixed(6)} ${quote}`;
+      usdEl.innerText = 'Margin (USD): ⚠️ Enter cross rate';
+      blockedEl.innerText = '-';
+      mlEl.innerText = '-';
+      return;
     }
+    marginUSD = marginInQuote / crossRate;
+    formulaText = '((lots*contract*price)/leverage)/crossRate — non-USD pair';
+  }
 
-    // Margin
-    function calculateMargin(){
-      const pair=(document.getElementById('pair').value||'').toUpperCase();
-      const lotType=document.getElementById('lotType').value;
-      const lots=parseFloat(document.getElementById('lots').value);
-      const price=parseFloat(document.getElementById('price').value);
-      const leverage=parseFloat(document.getElementById('leverage').value);
-      const crossRate=parseFloat(document.getElementById('crossRate').value);
-      const equity=parseFloat(document.getElementById('equity').value);
+  formulaEl.innerText = 'Formula: ' + formulaText;
+  inQuoteEl.innerText = `Margin (${quote}): ${marginInQuote.toFixed(6)} ${quote}`;
+  usdEl.innerText = `Margin (USD): $${marginUSD.toFixed(6)}`;
+  blockedEl.innerText = `Blocked Margin (USD): $${marginUSD.toFixed(6)}`;
 
-      const formulaEl=document.getElementById('marginFormula');
-      const inQuoteEl=document.getElementById('marginInQuoteResult');
-      const usdEl=document.getElementById('marginUSDResult');
-      const blockedEl=document.getElementById('blockedResult');
-      const mlEl=document.getElementById('marginLevelResult');
+  if (equity && equity > 0) {
+    const marginLevel = (equity / marginUSD) * 100;
+    mlEl.innerText = `Margin Level %: ${marginLevel.toFixed(2)}%`;
+  } else {
+    mlEl.innerText = 'Margin Level %: ⚠️ Enter valid equity';
+  }
+}
 
-      if(!pair||pair.length<6||isNaN(lots)||isNaN(price)||isNaN(leverage)||lots<=0||leverage<=0){
-        formulaEl.innerText='Formula: -'; inQuoteEl.innerText='-'; usdEl.innerText='-'; blockedEl.innerText='-'; mlEl.innerText='-'; return;
-      }
 
-      const base=pair.slice(0,3); const quote=pair.slice(3); const contract=contractSize(lotType);
-      let marginInQuote=null; let marginUSD=null; let formulaText='';
+// Pip Value & Spread Cost
+// Pip Value & Spread Cost
+// Pip Value & Spread Cost
+// Pip Value & Spread Cost
+function calculatePipAndSpread(){
+  const pair = (document.getElementById('pvPair').value || '').toUpperCase();
+  const lotType = document.getElementById('pvLot').value;
+  const price = parseFloat(document.getElementById('pvPrice').value);
+  const cross = parseFloat(document.getElementById('pvCross').value);
+  const spreadPips = parseFloat(document.getElementById('pvSpread').value);
+  let spreadLots = parseFloat(document.getElementById('pvSpreadLots').value);
+  const pipOut = document.getElementById('pipValueResult');
+  const scOut = document.getElementById('spreadCostResult');
 
-      if(quote==='USD'){
-        marginUSD=(price*lots*contract)/leverage;
-        formulaText='((current market price * lot size * contract size)/leverage)  — USD quote';
-        inQuoteEl.innerText=`Margin (${quote}): $${marginUSD.toFixed(6)}`; usdEl.innerText=`Margin (USD): $${marginUSD.toFixed(6)}`;
-      } else if(base==='USD'){
-        marginUSD=(lots*contract)/leverage;
-        formulaText='((lot size * contract size)/leverage)  — USD base';
-        inQuoteEl.innerText=`Margin (${quote}): $${marginUSD.toFixed(6)} (converted)`; usdEl.innerText=`Margin (USD): $${marginUSD.toFixed(6)}`;
-      } else {
-        marginInQuote=(price*lots*contract)/leverage;
-        formulaText='((current market price * lot size * contract size)/leverage) → convert USD by dividing USDtoQuote';
-        if(isNaN(crossRate)||crossRate<=0){ formulaEl.innerText='Formula: '+formulaText; inQuoteEl.innerText=`Margin (${quote}): ${marginInQuote.toFixed(6)} ${quote}`; usdEl.innerText=`Margin (USD): ⚠️ Enter cross rate`; blockedEl.innerText='-'; mlEl.innerText='-'; return; }
-        marginUSD=marginInQuote/crossRate;
-        inQuoteEl.innerText=`Margin (${quote}): ${marginInQuote.toFixed(6)} ${quote}`;
-        usdEl.innerText=`Margin (USD): $${marginUSD.toFixed(12)} (converted)`;
-      }
+  if (!pair || isNaN(spreadPips)) {
+    pipOut.innerText = '⚠️ Enter pair and spread';
+    scOut.innerText = '-';
+    return;
+  }
 
-      formulaEl.innerText='Formula: '+formulaText;
-      if(marginUSD!==null&&isFinite(marginUSD)){
-        blockedEl.innerText=`Blocked Margin (USD): $${marginUSD.toFixed(12)}`;
-        if(!isNaN(equity)&&equity>0){
-          mlEl.innerText=`Margin Level %: ${ (isFinite(equity/marginUSD*100)?(equity/marginUSD*100).toFixed(2):'NaN') }%`;
-        } else mlEl.innerText='Margin Level %: ⚠️ Enter valid equity';
-      } else { blockedEl.innerText='-'; mlEl.innerText='-'; }
+  if (isNaN(spreadLots) || spreadLots <= 0) spreadLots = 1;
+
+  const pipSize = detectPipSize(pair);
+  const contract = contractSize(lotType);
+  const base = pair.slice(0, 3);
+  const quote = pair.slice(3);
+  let pipValueUSD;
+
+if (quote === 'USD') {
+    // USD as quote → pip value does NOT require price, keep as-is
+    pipValueUSD = contract * pipSize;
+} else if (base === 'USD') {
+    // USD as base → price required
+    if (!price || isNaN(price) || price <= 0) {
+        pipOut.innerText = '⚠️ Enter valid price';
+        scOut.innerText = '-';
+        return;
     }
-
-    // Pip value & Spread cost
-    function calculatePipAndSpread(){
-      const pair=(document.getElementById('pvPair').value||'').toUpperCase();
-      const lotType=document.getElementById('pvLot').value;
-      const price=parseFloat(document.getElementById('pvPrice').value);
-      const cross=parseFloat(document.getElementById('pvCross').value);
-      const spreadPips=parseFloat(document.getElementById('pvSpread').value);
-      const spreadLots=parseFloat(document.getElementById('pvSpreadLots').value);
-      const pipOut=document.getElementById('pipValueResult');
-      const scOut=document.getElementById('spreadCostResult');
-      if(!pair||isNaN(price)||isNaN(spreadPips)){ pipOut.innerText='⚠️ Enter pair, price and spread'; scOut.innerText='-'; return; }
-      const pipSize=detectPipSize(pair); const base=pair.slice(0,3); const quote=pair.slice(3); const contract=contractSize(lotType);
-      let pipValueUSD=NaN;
-      if(quote==='USD'){ pipValueUSD=pipSize*contract; }
-      else if(base==='USD'){ pipValueUSD=(pipSize*contract)/price; }
-      else{ if(isNaN(cross)||cross<=0){ pipOut.innerText='⚠️ Enter cross rate'; scOut.innerText='-'; return; } pipValueUSD=(pipSize*contract)/cross; }
-      pipOut.innerText=`Pip value (1 lot USD): $${(isFinite(pipValueUSD)?pipValueUSD.toFixed(8):'NaN')}`;
-      const cost=spreadPips*pipValueUSD*(isNaN(spreadLots)?1:spreadLots);
-      scOut.innerText=`Spread cost (USD) for ${spreadLots||1} lot(s): $${(isFinite(cost)?cost.toFixed(6):'NaN')}`;
+    pipValueUSD = (contract * pipSize) / price;
+} else {
+    // Non-USD pair → cross rate required
+    if (!cross || isNaN(cross) || cross <= 0) {
+        pipOut.innerText = '⚠️ Enter cross rate';
+        scOut.innerText = '-';
+        return;
     }
+    pipValueUSD = (contract * pipSize) / cross;
+}
 
-    // Profit/Loss USD
-    function calculatePL(){
-      const pair=(document.getElementById('plPair').value||'').toUpperCase();
-      const lotType=document.getElementById('plLotType').value;
-      const lots=parseFloat(document.getElementById('plLots').value);
-      const open=parseFloat(document.getElementById('plOpen').value);
-      const close=parseFloat(document.getElementById('plClose').value);
-      const type=document.getElementById('plType').value;
-      const cross=parseFloat(document.getElementById('plCross').value);
-      const out=document.getElementById('plResult');
-      if(!pair||isNaN(lots)||isNaN(open)||isNaN(close)){out.innerText='⚠️ Enter pair, lots, open & close';return;}
-      const pipSize=detectPipSize(pair); const contract=contractSize(lotType); const base=pair.slice(0,3); const quote=pair.slice(3);
-      const pips=(type==='buy')?(close-open)/pipSize:(open-close)/pipSize;
-      let pipValueUSD=NaN;
-      if(quote==='USD'){ pipValueUSD=pipSize*contract; }
-      else if(base==='USD'){ if(isNaN(close)||close<=0){out.innerText='⚠️ Need valid close price';return;} pipValueUSD=(pipSize*contract)/close; }
-      else{ if(isNaN(cross)||cross<=0){out.innerText='⚠️ Enter cross rate';return;} pipValueUSD=(pipSize*contract)/cross; }
-      const profit=pips*lots*pipValueUSD;
-      out.innerText=`Profit/Loss: $${(isFinite(profit)?profit.toFixed(8):'NaN')} (Pips: ${pips.toFixed(2)})`;
+
+  pipOut.innerText = `Pip value (1 lot USD): $${pipValueUSD.toFixed(8)}`;
+  const cost = spreadPips * pipValueUSD * spreadLots;
+  scOut.innerText = `Spread cost (USD) for ${spreadLots} lot(s): $${cost.toFixed(6)}`;
+}
+
+
+
+// Profit/Loss USD
+// Profit/Loss USD
+// Profit/Loss USD
+// Profit/Loss USD
+function detectPipSize(pair) {
+  // JPY pairs have a pip size of 0.01; others have 0.0001
+  const quote = pair.slice(3).toUpperCase();
+  return quote === 'JPY' ? 0.01 : 0.0001;
+}
+
+function contractSize(lotType) {
+  // Return contract size in units based on lot type
+  switch (lotType.toLowerCase()) {
+    case 'micro':
+      return 1000;
+    case 'mini':
+      return 10000;
+    case 'standard':
+      return 100000;
+    default:
+      return 0; // Invalid lot type
+  }
+}
+
+function calculatePL() {
+  // Retrieve and validate inputs
+  const pair = (document.getElementById('plPair').value || '').toUpperCase().trim();
+  const lotType = document.getElementById('plLotType').value.trim();
+  const lots = parseFloat(document.getElementById('plLots').value);
+  const open = parseFloat(document.getElementById('plOpen').value);
+  const close = parseFloat(document.getElementById('plClose').value);
+  const type = document.getElementById('plType').value.toLowerCase();
+  const cross = parseFloat(document.getElementById('plCross').value);
+  const out = document.getElementById('plResult');
+
+  // Input validation
+  if (!pair || pair.length !== 6) {
+    out.innerText = '⚠️ Enter a valid 6-character currency pair (e.g., GBPUSD)';
+    return;
+  }
+  if (!['micro', 'mini', 'standard'].includes(lotType.toLowerCase())) {
+    out.innerText = '⚠️ Enter a valid lot type (Micro, Mini, Standard)';
+    return;
+  }
+  if (isNaN(lots) || lots <= 0) {
+    out.innerText = '⚠️ Enter a valid number of lots (greater than 0)';
+    return;
+  }
+  if (isNaN(open) || open <= 0) {
+    out.innerText = '⚠️ Enter a valid open price (greater than 0)';
+    return;
+  }
+  if (isNaN(close) || close <= 0) {
+    out.innerText = '⚠️ Enter a valid close price (greater than 0)';
+    return;
+  }
+  if (!['buy', 'sell'].includes(type)) {
+    out.innerText = '⚠️ Enter a valid trade type (Buy or Sell)';
+    return;
+  }
+
+  const base = pair.slice(0, 3);
+  const quote = pair.slice(3);
+  const pipSize = detectPipSize(pair);
+  const contract = contractSize(lotType);
+
+  // Validate contract size
+  if (contract === 0) {
+    out.innerText = '⚠️ Invalid lot type';
+    return;
+  }
+
+  // Calculate price difference and pips
+  const priceDiff = type === 'buy' ? (close - open) : (open - close);
+  const pips = priceDiff / pipSize;
+
+  let pipValueUSD = 0;
+
+  // Calculate pip value in USD
+  if (quote === 'USD') {
+    // USD is quote currency (e.g., GBPUSD)
+    pipValueUSD = pipSize * contract;
+  } else if (base === 'USD') {
+    // USD is base currency (e.g., USDJPY)
+    pipValueUSD = (pipSize * contract) / close;
+  } else {
+    // Cross pair (e.g., AUDCAD, EURCHF)
+    if (isNaN(cross) || cross <= 0) {
+      out.innerText = '⚠️ Enter a valid cross rate (USD/Quote currency, e.g., USD/CAD for AUDCAD)';
+      return;
     }
-  </script>
+    pipValueUSD = (pipSize * contract) / cross;
+  }
+
+  // Calculate profit/loss
+  const profitUSD = pips * pipValueUSD * lots;
+
+  // Output with higher precision (4 decimal places for clarity, adjustable as needed)
+  out.innerText = `Profit/Loss (USD): $${profitUSD.toFixed(4)}`;
+}
+
+
+// Add event listeners for real-time updates
+document.querySelectorAll('input,select').forEach(el=>el.addEventListener('input',updateAll));
+
+</script>
 </body>
 </html>
-
-
