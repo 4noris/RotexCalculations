@@ -160,45 +160,82 @@ Important Note:<br>
 </div>
 
 <script>
-function point(d){ return Math.pow(10,-d); }
+function point(d){
+  return Math.pow(10, -Number(d));
+}
 
+/* NOTIONAL VALUE */
 function calcNotional(){
-  nv_res.innerText =
-    (nv_price.value * nv_lots.value * nv_contract.value * nv_conv.value).toFixed(2);
+  const price = Number(nv_price.value);
+  const lots = Number(nv_lots.value);
+  const contract = Number(nv_contract.value);
+  const conv = Number(nv_conv.value);
+
+  nv_res.innerText = (price * lots * contract * conv).toFixed(2);
 }
 
+/* LEVERAGE */
 function calcLeverage(){
-  lev_res.innerText =
-    (lev_price.value * lev_lots.value * lev_contract.value / lev_margin.value).toFixed(2);
+  const price = Number(lev_price.value);
+  const lots = Number(lev_lots.value);
+  const contract = Number(lev_contract.value);
+  const margin = Number(lev_margin.value);
+
+  lev_res.innerText = (price * lots * contract / margin).toFixed(2);
 }
 
+/* POINT VALUE PER LOT */
 function calcPVLot(){
-  pvl_res.innerText =
-    (point(pvl_digits.value) * pvl_contract.value * pvl_conv.value).toFixed(5);
+  const digits = Number(pvl_digits.value);
+  const contract = Number(pvl_contract.value);
+  const conv = Number(pvl_conv.value);
+
+  pvl_res.innerText = (point(digits) * contract * conv).toFixed(5);
 }
 
+/* POINT VALUE */
 function calcPV(){
-  pv_res.innerText =
-    (point(pv_digits.value) * pv_lots.value * pv_contract.value * pv_conv.value).toFixed(5);
+  const digits = Number(pv_digits.value);
+  const lots = Number(pv_lots.value);
+  const contract = Number(pv_contract.value);
+  const conv = Number(pv_conv.value);
+
+  pv_res.innerText = (point(digits) * lots * contract * conv).toFixed(5);
 }
 
+/* COMMISSION PER MILLION */
 function calcCPM(){
-  cpm_res.innerText =
-    (cpm_notional.value * (cpm_amt.value / 1000000)).toFixed(2);
+  const notional = Number(cpm_notional.value);
+  const amt = Number(cpm_amt.value);
+
+  cpm_res.innerText = (notional * (amt / 1_000_000)).toFixed(2);
 }
 
+/* SWAP */
 function calcSwap(){
+  const digits = Number(sw_digits.value);
+  const contract = Number(sw_contract.value);
+  const lots = Number(sw_lots.value);
+  const rate = Number(sw_rate.value);
+  const days = Number(sw_days.value);
+
   sw_res.innerText =
-    (point(sw_digits.value) * sw_contract.value * sw_lots.value * sw_rate.value * sw_days.value).toFixed(5);
+    (point(digits) * contract * lots * rate * days).toFixed(5);
 }
 
+/* COMMISSION */
 function calcCommission(){
-  let rate = com_rate.value;
+  const price = Number(com_price.value);
+  const contract = Number(com_contract.value);
+  const lots = Number(com_lots.value);
+  let rate = Number(com_rate.value);
+
   if(com_type.value === "crypto") rate /= 100;
-  com_res.innerText =
-    (com_price.value * com_contract.value * com_lots.value * rate).toFixed(2);
+
+  com_res.innerText = (price * contract * lots * rate).toFixed(2);
 }
 </script>
 
 </body>
 </html>
+
