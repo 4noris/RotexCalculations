@@ -2,213 +2,165 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Rotex Forex Calculator (Market Standard)</title>
+<title>Rotex Trade Summary Calculator</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
+*{box-sizing:border-box}
 body{
+  margin:0;
+  padding:20px;
   background:#000;
   color:#fff;
-  font-family:Arial,Helvetica,sans-serif;
-  padding:20px
+  font-family:Arial, Helvetica, sans-serif;
 }
-.container{
-  display:flex;
-  flex-wrap:wrap;
-  gap:25px;
-  justify-content:center
-}
-.box{
-  width:380px;
-  background:rgba(255,255,255,.05);
-  border:1px solid rgba(255,255,255,.2);
-  border-radius:12px;
-  padding:15px
-}
-h2{
-  margin-bottom:10px;
+h1{
+  text-align:center;
+  font-size:28px;
+  margin-bottom:20px;
   background:linear-gradient(90deg,#5A378A,#EE7448);
   -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent
+  -webkit-text-fill-color:transparent;
 }
-label{font-size:13px;margin-top:8px;display:block}
-input,select{
+.container{
+  max-width:520px;
+  margin:0 auto;
+  padding:20px;
+  border-radius:14px;
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.2);
+}
+label{
+  display:block;
+  margin-top:12px;
+  font-size:13px;
+  opacity:.85;
+}
+input{
   width:100%;
-  padding:8px;
-  margin-top:5px;
-  background:rgba(255,255,255,.08);
-  border:1px solid rgba(255,255,255,.3);
+  margin-top:6px;
+  padding:9px;
+  background:#111;
+  color:#fff;
+  border:1px solid rgba(255,255,255,0.3);
   border-radius:6px;
-  color:#fff
+  font-size:14px;
 }
 .result{
-  margin-top:12px;
-  background:rgba(255,255,255,.1);
-  padding:8px;
-  border-radius:6px
+  margin-top:16px;
+  padding:12px;
+  border-radius:10px;
+  background:#111;
+  border:1px solid rgba(255,255,255,0.3);
+  font-weight:600;
+  font-size:14px;
+  line-height:1.6;
+}
+.small{
+  margin-top:8px;
+  font-size:12px;
+  color:#aaa;
+  text-align:center;
 }
 </style>
 </head>
 
 <body>
 
-<h1 style="text-align:center">ROTEX FOREX CALCULATOR</h1>
+<h1>ROTEX TRADE SUMMARY</h1>
 
 <div class="container">
 
-<!-- PIP VALUE & SPREAD -->
-<div class="box">
-<h2>Pip Value & Spread</h2>
+  <label>Symbol (e.g. EURUSD, BTCUSD)</label>
+  <input id="symbol" value="EURUSD">
 
-<label>Pair</label>
-<input id="pvPair" value="EURUSD">
+  <label>Lots</label>
+  <input id="lots" type="number" step="0.01" value="1">
 
-<label>Lots</label>
-<input id="pvLots" type="number" value="1">
+  <label>Open Price</label>
+  <input id="open" type="number" step="0.00001">
 
-<label>Price</label>
-<input id="pvPrice" type="number" step="0.00001">
+  <label>Close Price</label>
+  <input id="close" type="number" step="0.00001">
 
-<label>Spread (pips)</label>
-<input id="pvSpread" type="number" step="0.1">
+  <label>Commission Rate</label>
+  <input id="commission" type="number" step="0.01" value="0">
 
-<div class="result" id="pipValueResult">-</div>
-<div class="result" id="spreadCostResult">-</div>
-</div>
+  <label>Swap Rate (per day)</label>
+  <input id="swap" type="number" step="0.0001" value="0">
 
-<!-- PROFIT / LOSS -->
-<div class="box">
-<h2>Profit / Loss</h2>
+  <label>Days Held</label>
+  <input id="days" type="number" value="1">
 
-<label>Pair</label>
-<input id="plPair" value="EURUSD">
+  <div class="result" id="output">
+    Enter values to see trade summary
+  </div>
 
-<label>Lots</label>
-<input id="plLots" type="number" value="1">
-
-<label>Open Price</label>
-<input id="plOpen" type="number" step="0.00001">
-
-<label>Close Price</label>
-<input id="plClose" type="number" step="0.00001">
-
-<label>Type</label>
-<select id="plType">
-<option value="buy">Buy</option>
-<option value="sell">Sell</option>
-</select>
-
-<div class="result" id="plResult">-</div>
-</div>
-
-<!-- MARGIN -->
-<div class="box">
-<h2>Margin Calculator</h2>
-
-<label>Pair</label>
-<input id="mPair" value="EURUSD">
-
-<label>Lots</label>
-<input id="mLots" type="number" value="1">
-
-<label>Price</label>
-<input id="mPrice" type="number" step="0.00001">
-
-<label>Leverage (1:100 → 100)</label>
-<input id="mLeverage" type="number" value="100">
-
-<label>Equity (USD)</label>
-<input id="mEquity" type="number" value="1000">
-
-<div class="result" id="marginResult">-</div>
-<div class="result" id="marginLevelResult">-</div>
-</div>
+  <div class="small">
+    Forex: commission as decimal (e.g. 0.0002)<br>
+    Crypto: commission as % (e.g. 0.1)
+  </div>
 
 </div>
 
 <script>
-const CONTRACT = 100000;
+/* ================================
+   CORE LOGIC
+================================ */
 
-// mock conversion rates → replace with live API later
-const FX = {
-  EURUSD: 1.08,
-  USDJPY: 150,
-  GBPUSD: 1.26,
-  AUDUSD: 0.66,
-  USDCAD: 1.35
-};
-
-function pipSize(pair){
-  return pair.endsWith("JPY") ? 0.01 : 0.0001;
+function isCrypto(symbol){
+  symbol = symbol.toUpperCase();
+  return symbol.includes("BTC") || symbol.includes("ETH");
 }
 
-function convertToUSD(currency){
-  if(currency==="USD") return 1;
-  const pair = currency+"USD";
-  const inv = "USD"+currency;
-  if(FX[pair]) return FX[pair];
-  if(FX[inv]) return 1/FX[inv];
-  return 1;
+function contractSize(){
+  return 100000; // standard lot
 }
 
-/* PIP VALUE */
-function calcPip(){
-  const pair=pvPair.value.toUpperCase();
-  const base=pair.slice(0,3), quote=pair.slice(3);
-  const lots=+pvLots.value;
-  const spread=+pvSpread.value||0;
+function update(){
+  const symbol = document.getElementById("symbol").value.toUpperCase();
+  const lots = parseFloat(document.getElementById("lots").value);
+  const open = parseFloat(document.getElementById("open").value);
+  const close = parseFloat(document.getElementById("close").value);
+  const commissionRate = parseFloat(document.getElementById("commission").value);
+  const swapRate = parseFloat(document.getElementById("swap").value);
+  const days = parseInt(document.getElementById("days").value);
 
-  const pip=pipSize(pair);
-  let pipValueQuote = pip * CONTRACT * lots;
-  let pipUSD = pipValueQuote * convertToUSD(quote);
+  if(isNaN(open) || isNaN(close)) return;
 
-  pipValueResult.innerText = `Pip Value: $${pipUSD.toFixed(2)}`;
-  spreadCostResult.innerText = `Spread Cost: $${(pipUSD*spread).toFixed(2)}`;
+  const cs = contractSize();
+
+  /* Gross P/L */
+  const grossPL = (close - open) * cs * lots;
+
+  /* Commission */
+  let commissionCost = 0;
+  if(commissionRate > 0){
+    if(isCrypto(symbol)){
+      commissionCost = close * cs * lots * (commissionRate / 100);
+    } else {
+      commissionCost = close * cs * lots * commissionRate;
+    }
+  }
+
+  /* Swap */
+  const swapCost = swapRate * lots * days;
+
+  /* Net */
+  const netPL = grossPL - commissionCost - swapCost;
+
+  document.getElementById("output").innerHTML =
+    "Gross P/L: $" + grossPL.toFixed(2) + "<br>" +
+    "Commission: $" + commissionCost.toFixed(2) + "<br>" +
+    "Swap: $" + swapCost.toFixed(2) + "<br>" +
+    "————————————<br>" +
+    "NET RESULT: $" + netPL.toFixed(2);
 }
 
-/* PROFIT / LOSS */
-function calcPL(){
-  const pair=plPair.value.toUpperCase();
-  const base=pair.slice(0,3), quote=pair.slice(3);
-  const open=+plOpen.value, close=+plClose.value;
-  const lots=+plLots.value;
-  if(!open||!close) return;
-
-  let points=(close-open);
-  if(plType.value==="sell") points*=-1;
-
-  let profitQuote = points * CONTRACT * lots;
-  let profitUSD = profitQuote * convertToUSD(quote);
-
-  plResult.innerText=`P/L: $${profitUSD.toFixed(2)}`;
-}
-
-/* MARGIN */
-function calcMargin(){
-  const pair=mPair.value.toUpperCase();
-  const base=pair.slice(0,3);
-  const price=+mPrice.value;
-  const lots=+mLots.value;
-  const lev=+mLeverage.value;
-  const equity=+mEquity.value;
-  if(!price||!lev) return;
-
-  let marginBase = CONTRACT * lots;
-  let marginUSD = (base==="USD")
-    ? marginBase/lev
-    : (marginBase*price*convertToUSD(base))/lev;
-
-  marginResult.innerText=`Margin Used: $${marginUSD.toFixed(2)}`;
-  marginLevelResult.innerText=
-    `Margin Level: ${((equity/marginUSD)*100).toFixed(2)}%`;
-}
-
-document.querySelectorAll("input,select")
-.forEach(e=>e.addEventListener("input",()=>{
-  calcPip();
-  calcPL();
-  calcMargin();
-}));
+/* Live updates */
+document.querySelectorAll("input").forEach(el=>{
+  el.addEventListener("input", update);
+});
 </script>
 
 </body>
