@@ -16,7 +16,7 @@ body{
 }
 h1{
   text-align:center;
-  margin-bottom:18px;
+  margin-bottom:20px;
   background:linear-gradient(90deg,#5A378A,#EE7448);
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
@@ -30,17 +30,11 @@ h1{
   border-radius:14px;
 }
 .box h3{
-  margin:0 0 8px;
-}
-label{
-  display:block;
-  margin-top:8px;
-  font-size:13px;
-  opacity:.85;
+  margin:0 0 10px;
 }
 input,select,button{
   width:100%;
-  margin-top:5px;
+  margin-top:6px;
   padding:8px;
   background:#111;
   color:#fff;
@@ -50,7 +44,6 @@ input,select,button{
 button{
   margin-top:10px;
   cursor:pointer;
-  background:#1c1c1c;
   font-weight:600;
 }
 .result{
@@ -61,10 +54,9 @@ button{
   border:1px solid rgba(255,255,255,0.3);
   font-weight:600;
 }
-.small{
-  font-size:12px;
+.note{
+  font-size:13px;
   color:#aaa;
-  margin-top:6px;
 }
 </style>
 </head>
@@ -73,169 +65,150 @@ button{
 
 <h1>ROTEX FORMULA CALCULATOR</h1>
 
-<!-- NOTIONAL VALUE -->
-<div class="box">
-<h3>Notional Value (USD)</h3>
-<label>Price</label><input id="nv_price">
-<label>Lot Size</label><input id="nv_lots" value="1">
-<label>Contract Size</label><input id="nv_contract" value="100000">
-<label>Conversion Rate</label><input id="nv_conv" value="1">
-<button onclick="calcNotional()">Calculate</button>
-<div class="result" id="nv_res">-</div>
-</div>
-
 <!-- LEVERAGE -->
 <div class="box">
 <h3>Leverage</h3>
-<label>Market Price</label><input id="lev_price">
-<label>Lot Size</label><input id="lev_lots" value="1">
-<label>Contract Size</label><input id="lev_contract" value="100000">
-<label>Blocked Margin</label><input id="lev_margin">
+<input id="lev_price" placeholder="Current Market Price">
+<input id="lev_lot" placeholder="Lot Size">
+<input id="lev_contract" placeholder="Contract Size">
+<input id="lev_margin" placeholder="Blocked Margin">
 <button onclick="calcLeverage()">Calculate</button>
-<div class="result" id="lev_res">-</div>
+<div class="result" id="lev_result">-</div>
 </div>
 
 <!-- POINT VALUE PER LOT -->
 <div class="box">
 <h3>Point Value per Lot</h3>
-<label>Digits</label><input id="pvl_digits" value="5">
-<label>Contract Size</label><input id="pvl_contract" value="100000">
-<label>Conversion Rate</label><input id="pvl_conv" value="1">
+<input id="pvl_move" placeholder="Smallest Movement">
+<input id="pvl_contract" placeholder="Contract Size">
+<input id="pvl_conv" placeholder="Conversion Rate">
 <button onclick="calcPVLot()">Calculate</button>
-<div class="result" id="pvl_res">-</div>
-</div>
-
-<!-- POINT VALUE -->
-<div class="box">
-<h3>Point Value</h3>
-<label>Digits</label><input id="pv_digits" value="5">
-<label>Lot Size</label><input id="pv_lots" value="1">
-<label>Contract Size</label><input id="pv_contract" value="100000">
-<label>Conversion Rate</label><input id="pv_conv" value="1">
-<button onclick="calcPV()">Calculate</button>
-<div class="result" id="pv_res">-</div>
+<div class="result" id="pvl_result">-</div>
 </div>
 
 <!-- COMMISSION PER MILLION -->
 <div class="box">
 <h3>Commission per Million</h3>
-<label>Notional Value (USD)</label><input id="cpm_notional">
-<label>Amount per Million</label><input id="cpm_amt">
+<input id="cpm_notional" placeholder="Notional Value">
+<input id="cpm_amount" placeholder="Amount per Million">
 <button onclick="calcCPM()">Calculate</button>
-<div class="result" id="cpm_res">-</div>
+<div class="result" id="cpm_result">-</div>
+</div>
+
+<!-- NOTIONAL VALUE -->
+<div class="box">
+<h3>Notional Value (USD)</h3>
+<input id="nv_price" placeholder="Price">
+<input id="nv_lot" placeholder="Lot Size">
+<input id="nv_contract" placeholder="Contract Size">
+<input id="nv_conv" placeholder="Conversion Rate">
+<button onclick="calcNotional()">Calculate</button>
+<div class="result" id="nv_result">-</div>
+</div>
+
+<!-- POINT VALUE -->
+<div class="box">
+<h3>Point Value</h3>
+<input id="pv_move" placeholder="Smallest Movement">
+<input id="pv_lot" placeholder="Lot Size">
+<input id="pv_contract" placeholder="Contract Size">
+<input id="pv_conv" placeholder="Conversion Rate">
+<button onclick="calcPV()">Calculate</button>
+<div class="result" id="pv_result">-</div>
 </div>
 
 <!-- SWAP -->
 <div class="box">
 <h3>Swap</h3>
-<label>Digits</label><input id="sw_digits" value="5">
-<label>Contract Size</label><input id="sw_contract" value="100000">
-<label>Lot Size</label><input id="sw_lots" value="1">
-<label>Swap Rate</label><input id="sw_rate">
-<label>Days</label><input id="sw_days" value="1">
+<input id="sw_move" placeholder="Smallest Movement">
+<input id="sw_contract" placeholder="Contract Size">
+<input id="sw_lot" placeholder="Lot Size">
+<input id="sw_rate" placeholder="Swap Rate">
+<input id="sw_days" placeholder="Days">
 <button onclick="calcSwap()">Calculate</button>
-<div class="result" id="sw_res">-</div>
+<div class="result" id="sw_result">-</div>
 </div>
 
 <!-- COMMISSION -->
 <div class="box">
 <h3>Commission</h3>
-<label>Close Price</label><input id="com_price">
-<label>Contract Size</label><input id="com_contract" value="1">
-<label>Lot Size</label><input id="com_lots" value="1">
-<label>Commission Rate (Forex = decimal | Crypto = %)</label><input id="com_rate">
-<label>Instrument</label>
+<input id="com_price" placeholder="Close Price">
+<input id="com_contract" placeholder="Contract Size">
+<input id="com_lot" placeholder="Lot Size">
+<input id="com_rate" placeholder="Commission Rate">
 <select id="com_type">
   <option value="forex">Forex</option>
   <option value="crypto">Crypto</option>
 </select>
 <button onclick="calcCommission()">Calculate</button>
-<div class="result" id="com_res">-</div>
+<div class="result" id="com_result">-</div>
 </div>
 
-<div class="box small">
-Important Note:<br>
+<!-- NOTE -->
+<div class="box note">
+<strong>Important Note</strong><br>
 • Multiply if USD is Quote (e.g. NZDUSD)<br>
 • Divide if USD is Base (e.g. USDJPY)
 </div>
 
 <script>
-function point(d){
-  return Math.pow(10, -Number(d));
-}
-
-/* NOTIONAL VALUE */
-function calcNotional(){
-  const price = Number(nv_price.value);
-  const lots = Number(nv_lots.value);
-  const contract = Number(nv_contract.value);
-  const conv = Number(nv_conv.value);
-
-  nv_res.innerText = (price * lots * contract * conv).toFixed(2);
-}
-
-/* LEVERAGE */
 function calcLeverage(){
-  const price = Number(lev_price.value);
-  const lots = Number(lev_lots.value);
-  const contract = Number(lev_contract.value);
-  const margin = Number(lev_margin.value);
-
-  lev_res.innerText = (price * lots * contract / margin).toFixed(2);
+  lev_result.innerText =
+    (Number(lev_price.value) *
+     Number(lev_lot.value) *
+     Number(lev_contract.value) /
+     Number(lev_margin.value)).toFixed(2);
 }
 
-/* POINT VALUE PER LOT */
 function calcPVLot(){
-  const digits = Number(pvl_digits.value);
-  const contract = Number(pvl_contract.value);
-  const conv = Number(pvl_conv.value);
-
-  pvl_res.innerText = (point(digits) * contract * conv).toFixed(5);
+  pvl_result.innerText =
+    (Number(pvl_move.value) *
+     Number(pvl_contract.value) *
+     Number(pvl_conv.value)).toFixed(5);
 }
 
-/* POINT VALUE */
-function calcPV(){
-  const digits = Number(pv_digits.value);
-  const lots = Number(pv_lots.value);
-  const contract = Number(pv_contract.value);
-  const conv = Number(pv_conv.value);
-
-  pv_res.innerText = (point(digits) * lots * contract * conv).toFixed(5);
-}
-
-/* COMMISSION PER MILLION */
 function calcCPM(){
-  const notional = Number(cpm_notional.value);
-  const amt = Number(cpm_amt.value);
-
-  cpm_res.innerText = (notional * (amt / 1_000_000)).toFixed(2);
+  cpm_result.innerText =
+    (Number(cpm_notional.value) *
+     (Number(cpm_amount.value) / 1000000)).toFixed(2);
 }
 
-/* SWAP */
+function calcNotional(){
+  nv_result.innerText =
+    (Number(nv_price.value) *
+     Number(nv_lot.value) *
+     Number(nv_contract.value) *
+     Number(nv_conv.value)).toFixed(2);
+}
+
+function calcPV(){
+  pv_result.innerText =
+    (Number(pv_move.value) *
+     Number(pv_lot.value) *
+     Number(pv_contract.value) *
+     Number(pv_conv.value)).toFixed(5);
+}
+
 function calcSwap(){
-  const digits = Number(sw_digits.value);
-  const contract = Number(sw_contract.value);
-  const lots = Number(sw_lots.value);
-  const rate = Number(sw_rate.value);
-  const days = Number(sw_days.value);
-
-  sw_res.innerText =
-    (point(digits) * contract * lots * rate * days).toFixed(5);
+  sw_result.innerText =
+    (Number(sw_move.value) *
+     Number(sw_contract.value) *
+     Number(sw_lot.value) *
+     Number(sw_rate.value) *
+     Number(sw_days.value)).toFixed(5);
 }
 
-/* COMMISSION */
 function calcCommission(){
-  const price = Number(com_price.value);
-  const contract = Number(com_contract.value);
-  const lots = Number(com_lots.value);
   let rate = Number(com_rate.value);
-
   if(com_type.value === "crypto") rate /= 100;
 
-  com_res.innerText = (price * contract * lots * rate).toFixed(2);
+  com_result.innerText =
+    (Number(com_price.value) *
+     Number(com_contract.value) *
+     Number(com_lot.value) *
+     rate).toFixed(2);
 }
 </script>
 
 </body>
 </html>
-
