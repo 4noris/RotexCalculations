@@ -4,362 +4,254 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Rotex Forex Calculator</title>
+
 <style>
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{
-    font-family:Arial,Helvetica,sans-serif;
-    background:black;
-    color:#fff;
-    padding:18px;
-  }
-  header h1{
-    text-align:center;
-    margin-bottom:16px;
-    font-size:2em;
-    background: linear-gradient(90deg, #5A378A 0%, #EE7448 92.4%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-  .container{
-    display:flex;
-    gap:30px;
-    flex-wrap:wrap;
-    justify-content: space-evenly;
-  }
-  .formulaBox{
-    background: rgba(255,255,255,0.05);
-    backdrop-filter: blur(12px);
-    width:420px;
-    min-width:300px;
-    height: fit-content;
-    border:1px solid rgba(255,255,255,0.2);
-    border-radius:12px;
-    padding:14px;
-    box-shadow:0 8px 20px rgba(255,255,255,0.05);
-  }
-  .formulaBox h3{
-    font-size:1.3em;
-    margin-bottom:8px;
-    color: transparent;
-    background: linear-gradient(90deg, #5A378A 0%, #EE7448 92.4%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-  label{
-    display:block;
-    margin-top:8px;
-    font-size:13px;
-  }
-  input, select{
-    margin-top:6px;
-    padding:8px 10px;
-    width:100%;
-    border:1px solid rgba(255,255,255,0.3);
-    border-radius:6px;
-    font-size:14px;
-    background: rgba(255,255,255,0.05);
-    color:#fff;
-  }
-  input::placeholder{
-    color: rgba(255,255,255,0.6);
-  }
-  .result{
-    margin-top:12px;
-    padding:8px;
-    background: rgba(255,255,255,0.05);
-    border-radius:6px;
-    border:1px solid rgba(255,255,255,0.2);
-    font-weight:600;
-  }
-  .small{
-    font-size:12px;
-    color:rgba(255,255,255,0.6);
-    margin-top:6px;
-  }
-  .formulaText{
-    font-size:13px;
-    color:rgba(255,255,255,0.8);
-    margin-top:8px;
-    font-style:italic;
-  }
-  footer>p{
-    margin: 20px;
-    color: gray;
-  }
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:Arial,Helvetica,sans-serif;
+  background:black;
+  color:#fff;
+  padding:18px;
+}
+header h1{
+  text-align:center;
+  margin-bottom:16px;
+  font-size:2em;
+  background: linear-gradient(90deg, #5A378A 0%, #EE7448 92.4%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.container{
+  display:flex;
+  gap:30px;
+  flex-wrap:wrap;
+  justify-content: space-evenly;
+}
+.formulaBox{
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(12px);
+  width:420px;
+  min-width:300px;
+  border:1px solid rgba(255,255,255,0.2);
+  border-radius:12px;
+  padding:14px;
+}
+.formulaBox h3{
+  margin-bottom:8px;
+  background: linear-gradient(90deg, #5A378A 0%, #EE7448 92.4%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+label{display:block;margin-top:8px;font-size:13px}
+input,select{
+  margin-top:6px;
+  padding:8px;
+  width:100%;
+  border-radius:6px;
+  border:1px solid rgba(255,255,255,0.3);
+  background: rgba(255,255,255,0.05);
+  color:#fff;
+}
+.result{
+  margin-top:12px;
+  padding:8px;
+  background: rgba(255,255,255,0.08);
+  border-radius:6px;
+}
+.small{font-size:12px;color:#aaa;margin-top:6px}
+footer p{text-align:center;color:gray;margin-top:30px}
 </style>
 </head>
+
 <body>
 <header><h1>ROTEX FOREX CALCULATOR</h1></header>
 
-<main>
 <div class="container">
 
-  <!-- Pip Difference -->
-  <div class="formulaBox">
-    <h3>Pip Difference</h3>
-    <label>Pair (e.g. EURUSD)</label>
-    <input id="pipPair" placeholder="EURUSD" value="EURUSD">
-    <label>Opening Price</label>
-    <input id="pipOpen" type="number" step="0.00001">
-    <label>Closing Price</label>
-    <input id="pipClose" type="number" step="0.00001">
-   <label>Digits (price precision)</label>
-  <select id="pipDigits">
-    <option value="5">5 (EURUSD)</option>
-    <option value="3">3 (JPY pairs)</option>
-    <option value="2">2 (BTC, XAU)</option>
-    <option value="1">1</option>
-  </select>
+<!-- Pip Difference -->
+<div class="formulaBox">
+<h3>Pip Difference</h3>
+<label>Pair</label>
+<input id="pipPair" value="EURUSD">
+<label>Open Price</label>
+<input id="pipOpen" type="number" step="0.00001">
+<label>Close Price</label>
+<input id="pipClose" type="number" step="0.00001">
+<div class="result" id="pipDiffResult">-</div>
+</div>
 
-    <div class="result" id="pipDiffResult">Pip Difference: -</div>
-    <div class="small">Note: JPY pairs use pip = 0.01; other pairs use pip = 0.0001.</div>
-  </div>
+<!-- Margin -->
+<div class="formulaBox">
+<h3>Margin Calculator</h3>
+<label>Pair</label>
+<input id="pair" value="AUDCAD">
+<label>Lot Type</label>
+<select id="lotType">
+<option value="standard">Standard</option>
+<option value="mini">Mini</option>
+<option value="micro">Micro</option>
+</select>
+<label>Lots</label>
+<input id="lots" type="number" value="1">
+<label>Price</label>
+<input id="price" type="number" step="0.00001">
+<label>Leverage (1:100 → 100)</label>
+<input id="leverage" type="number" value="100">
+<label>USD/QUOTE Rate (if non-USD)</label>
+<input id="crossRate" type="number" step="0.00001">
+<label>Equity (USD)</label>
+<input id="equity" type="number" value="1000">
+<div class="result" id="marginUSDResult">-</div>
+<div class="result" id="blockedResult">-</div>
+<div class="result" id="marginLevelResult">-</div>
+</div>
 
-  <!-- Margin Calculator -->
-  <div class="formulaBox">
-    <h3>Forex Margin Calculator</h3>
-    <label>Pair (BASEQUOTE, e.g. AUDCAD)</label>
-    <input id="pair" placeholder="AUDCAD" value="AUDCAD">
-    <label>Lot Type</label>
-    <select id="lotType">
-      <option value="standard">Standard (100,000)</option>
-      <option value="mini">Mini (10,000)</option>
-      <option value="micro">Micro (1,000)</option>
-    </select>
-    <label>Lots</label>
-    <input id="lots" type="number" step="0.01" value="1">
-    <label>Current Market Price</label>
-    <input id="price" type="number" step="0.00001" value="">
-    <label>Leverage (enter 100 for 1:100)</label>
-    <input id="leverage" type="number" step="1" value="100">
-    <label>Cross Rate (ONLY if pair is non-USD): enter 1 USDtoQUOTE</label>
-    <input id="crossRate" type="number" step="0.00001" placeholder="e.g. 1.38104">
-    <label>Account Equity (USD)</label>
-    <input id="equity" type="number" step="0.01" value="1000">
-    <div class="formulaText" id="marginFormula">Formula: -</div>
-    <div class="result" id="marginInQuoteResult">Margin (quote currency): -</div>
-    <div class="result" id="marginUSDResult">Margin (USD): -</div>
-    <div class="result" id="blockedResult">Blocked Margin (USD): -</div>
-    <div class="result" id="marginLevelResult">Margin Level %: -</div>
-  </div>
+<!-- Pip Value -->
+<div class="formulaBox">
+<h3>Pip Value & Spread</h3>
+<label>Pair</label>
+<input id="pvPair" value="AUDCAD">
+<label>Lot Type</label>
+<select id="pvLot">
+<option value="standard">Standard</option>
+<option value="mini">Mini</option>
+<option value="micro">Micro</option>
+</select>
+<label>Price</label>
+<input id="pvPrice" type="number" step="0.00001">
+<label>USD/QUOTE Rate</label>
+<input id="pvCross" type="number" step="0.00001">
+<label>Spread (pips)</label>
+<input id="pvSpread" type="number" step="0.01">
+<label>Lots</label>
+<input id="pvSpreadLots" type="number" value="1">
+<div class="result" id="pipValueResult">-</div>
+<div class="result" id="spreadCostResult">-</div>
+</div>
 
-  <!-- Pip Value & Spread Cost -->
-  <div class="formulaBox">
-    <h3>Pip Value & Spread Cost</h3>
-    <label>Pair</label>
-    <input id="pvPair" placeholder="AUDCAD" value="AUDCAD">
-    <label>Lot Type</label>
-    <select id="pvLot">
-      <option value="standard">Standard</option>
-      <option value="mini">Mini</option>
-      <option value="micro">Micro</option>
-    </select>
-    <label>Price</label>
-    <input id="pvPrice" type="number" step="0.00001" value="">
-    <label>Cross Rate (if non-USD)</label>
-    <input id="pvCross" type="number" step="0.00001" placeholder="e.g. 1.38104">
-    <label>Spread (pips)</label>
-    <input id="pvSpread" type="number" step="0.01" value="">
-    <label>Lots (for spread cost)</label>
-    <input id="pvSpreadLots" type="number" step="0.01" value="1">
-    <div class="result" id="pipValueResult">Pip value (1 lot in USD): -</div>
-    <div class="result" id="spreadCostResult">Spread cost (USD): -</div>
-  </div>
-
-  <!-- Profit/Loss -->
-  <div class="formulaBox">
-    <h3>Profit / Loss (USD)</h3>
-    <label>Pair</label>
-    <input id="plPair" placeholder="AUDCAD" value="AUDCAD">
-    <label>Lot Type</label>
-    <select id="plLotType">
-      <option value="standard">Standard</option>
-      <option value="mini">Mini</option>
-      <option value="micro">Micro</option>
-    </select>
-    <label>Lots</label>
-    <input id="plLots" type="number" step="0.01" value="1">
-    <label>Open Price</label>
-    <input id="plOpen" type="number" step="0.00001">
-    <label>Close Price</label>
-    <input id="plClose" type="number" step="0.00001">
-    <label>Trade Type</label>
-    <select id="plType">
-      <option value="buy">Buy (Long)</option>
-      <option value="sell">Sell (Short)</option>
-    </select>
-    <label>Cross Rate (if non-USD)</label>
-    <input id="plCross" type="number" step="0.00001" placeholder="e.g. 1.38104">
-    <div class="result" id="plResult">Profit/Loss (USD): -</div>
-  </div>
+<!-- Profit / Loss -->
+<div class="formulaBox">
+<h3>Profit / Loss</h3>
+<label>Pair</label>
+<input id="plPair" value="AUDCAD">
+<label>Lot Type</label>
+<select id="plLotType">
+<option value="standard">Standard</option>
+<option value="mini">Mini</option>
+<option value="micro">Micro</option>
+</select>
+<label>Lots</label>
+<input id="plLots" type="number" value="1">
+<label>Open Price</label>
+<input id="plOpen" type="number" step="0.00001">
+<label>Close Price</label>
+<input id="plClose" type="number" step="0.00001">
+<label>Type</label>
+<select id="plType">
+<option value="buy">Buy</option>
+<option value="sell">Sell</option>
+</select>
+<label>USD/QUOTE Rate</label>
+<input id="plCross" type="number" step="0.00001">
+<div class="result" id="plResult">-</div>
+</div>
 
 </div>
-</main>
-<footer>
-  <p align="center">Built by 4noris</p>
-</footer>
+
+<footer><p>Built by 4noris</p></footer>
+
 <script>
-/* ================================
-   INSTRUMENT CLASSIFICATION
-================================ */
-function getInstrumentType(pair) {
-  pair = pair.toUpperCase();
-  if (pair.includes('BTC') || pair.includes('ETH')) return 'CRYPTO';
-  return 'FOREX';
+function getPipSize(pair){
+  return pair.endsWith("JPY") ? 0.01 : 0.0001;
+}
+function contractSize(lot){
+  if(lot==="standard") return 100000;
+  if(lot==="mini") return 10000;
+  if(lot==="micro") return 1000;
 }
 
-function getPipSize(pair) {
-  return pair.slice(3) === 'JPY' ? 0.01 : 0.0001;
+function calcPipDiff(){
+  const open=+pipOpen.value, close=+pipClose.value;
+  if(!open||!close) return;
+  const pip=getPipSize(pipPair.value.toUpperCase());
+  pipDiffResult.innerText=
+    `Pips: ${((close-open)/pip).toFixed(2)}`;
 }
 
-function contractSize(lot) {
-  if (lot === 'standard') return 100000;
-  if (lot === 'mini') return 10000;
-  if (lot === 'micro') return 1000;
-  return 0;
-}
+function calculateMargin(){
+  const pairV=pair.value.toUpperCase();
+  const base=pairV.slice(0,3), quote=pairV.slice(3);
+  const lotsV=+lots.value, priceV=+price.value;
+  const lev=+leverage.value, cross=+crossRate.value;
+  const equityV=+equity.value;
+  if(!priceV||!lotsV||!lev) return;
 
-function updateAll() {
-  calcPipDiff();
-  calculateMargin();
-  calculatePipAndSpread();
-  calculatePL();
-}
-
-function calcPipDiff() {
-  const pair = pipPair.value.toUpperCase();
-  const open = parseFloat(pipOpen.value);
-  const close = parseFloat(pipClose.value);
-  const digits = parseInt(document.getElementById('pipDigits').value);
-
-  if (isNaN(open) || isNaN(close) || isNaN(digits)) {
-    pipDiffResult.innerText = '⚠️ Enter prices and digits';
-    return;
+  const contract=contractSize(lotType.value);
+  let margin;
+  if(quote==="USD") margin=(contract*lotsV*priceV)/lev;
+  else if(base==="USD") margin=(contract*lotsV)/lev;
+  else{
+    if(!cross) return;
+    margin=(contract*lotsV*priceV)/(lev*cross);
   }
 
-  const priceDiff = close - open;
-
-  // Market-standard definitions
-  const point = Math.pow(10, -digits);
-  const pip = (digits === 3 || digits === 5) ? point * 10 : point;
-
-  const points = priceDiff / point;
-  const pips = priceDiff / pip;
-
-  pipDiffResult.innerText =
-    `Price Diff: ${priceDiff.toFixed(digits)} | ` +
-    `Points: ${points.toFixed(1)} | ` +
-    `Pips: ${pips.toFixed(2)}`;
-}
-/* ================================
-   MARGIN (MT5 STANDARD)
-================================ */
-function calculateMargin() {
-  const pair = document.getElementById('pair').value.toUpperCase();
-  const lotType = document.getElementById('lotType').value;
-  const lots = parseFloat(document.getElementById('lots').value);
-  const price = parseFloat(document.getElementById('price').value);
-  const leverage = parseFloat(document.getElementById('leverage').value);
-  const cross = parseFloat(document.getElementById('crossRate').value);
-  const equity = parseFloat(document.getElementById('equity').value);
-
-  if (!pair || isNaN(lots) || isNaN(leverage)) return;
-
-  const base = pair.slice(0,3);
-  const quote = pair.slice(3);
-  const contract = contractSize(lotType);
-
-  let marginUSD;
-
-  if (quote === 'USD') {
-    marginUSD = (lots * contract * price) / leverage;
-  } else if (base === 'USD') {
-    marginUSD = (lots * contract) / leverage;
-  } else {
-    if (!cross) {
-      marginUSDResult.innerText = '⚠️ Enter USD/QUOTE rate';
-      return;
-    }
-    marginUSD = (lots * contract * price) / leverage / cross;
-  }
-
-  marginUSDResult.innerText = `Margin (USD): $${marginUSD.toFixed(2)}`;
-  blockedResult.innerText = `Blocked Margin: $${marginUSD.toFixed(2)}`;
-
-  if (equity > 0) {
-    marginLevelResult.innerText =
-      `Margin Level: ${((equity / marginUSD) * 100).toFixed(2)}%`;
-  }
+  marginUSDResult.innerText=`Margin USD: $${margin.toFixed(2)}`;
+  blockedResult.innerText=`Blocked: $${margin.toFixed(2)}`;
+  marginLevelResult.innerText=
+    `Margin Level: ${((equityV/margin)*100).toFixed(2)}%`;
 }
 
-/* ================================
-   PIP VALUE (FOREX ONLY)
-================================ */
-function calculatePipAndSpread() {
-  const pair = pvPair.value.toUpperCase();
-  if (getInstrumentType(pair) === 'CRYPTO') {
-    pipValueResult.innerText = 'N/A for Crypto';
-    spreadCostResult.innerText = 'Use price difference';
-    return;
-  }
-
-  const lotType = pvLot.value;
-  const price = parseFloat(pvPrice.value);
-  const cross = parseFloat(pvCross.value);
-  const spread = parseFloat(pvSpread.value);
-  const lots = parseFloat(pvSpreadLots.value) || 1;
-
-  const pip = getPipSize(pair);
-  const contract = contractSize(lotType);
-  const base = pair.slice(0,3);
-  const quote = pair.slice(3);
+function calculatePip(){
+  const pairV=pvPair.value.toUpperCase();
+  const pip=getPipSize(pairV);
+  const contract=contractSize(pvLot.value);
+  const priceV=+pvPrice.value, cross=+pvCross.value;
+  const spread=+pvSpread.value, lotsV=+pvSpreadLots.value||1;
+  const base=pairV.slice(0,3), quote=pairV.slice(3);
 
   let pipUSD;
+  if(quote==="USD") pipUSD=contract*pip;
+  else if(base==="USD") pipUSD=(contract*pip)/priceV;
+  else{
+    if(!cross) return;
+    pipUSD=(contract*pip)/cross;
+  }
 
-  if (quote === 'USD') pipUSD = contract * pip;
-  else if (base === 'USD') pipUSD = (contract * pip) / price;
-  else pipUSD = (contract * pip) / cross;
-
-  pipValueResult.innerText =
-    `Pip Value (1 lot): $${pipUSD.toFixed(5)}`;
-  spreadCostResult.innerText =
-    `Spread Cost: $${(pipUSD * spread * lots).toFixed(2)}`;
+  pipValueResult.innerText=`Pip Value: $${pipUSD.toFixed(5)}`;
+  if(spread)
+    spreadCostResult.innerText=
+      `Spread Cost: $${(pipUSD*spread*lotsV).toFixed(2)}`;
 }
 
-/* ================================
-   PROFIT / LOSS (TRUE MT5 LOGIC)
-================================ */
-function calculatePL() {
-  const pair = plPair.value.toUpperCase();
-  const lotType = plLotType.value;
-  const lots = parseFloat(plLots.value);
-  const open = parseFloat(plOpen.value);
-  const close = parseFloat(plClose.value);
-  const type = plType.value;
-  const cross = parseFloat(plCross.value);
+function calculatePL(){
+  const pairV=plPair.value.toUpperCase();
+  const open=+plOpen.value, close=+plClose.value;
+  if(!open||!close) return;
+  const lotsV=+plLots.value;
+  const contract=contractSize(plLotType.value);
+  const base=pairV.slice(0,3), quote=pairV.slice(3);
+  let raw=(close-open)*contract*lotsV;
+  if(plType.value==="sell") raw*=-1;
 
-  if (isNaN(open) || isNaN(close)) return;
-
-  const contract = contractSize(lotType);
-  let raw = (close - open) * contract * lots;
-  if (type === 'sell') raw *= -1;
-
-  let usdPL;
-
-  const base = pair.slice(0,3);
-  const quote = pair.slice(3);
-
-  if (quote === 'USD') usdPL = raw;
-  else if (base === 'USD') usdPL = raw / close;
-  else usdPL = raw / cross;
-
-  plResult.innerText = `Profit/Loss (USD): $${usdPL.toFixed(2)}`;
+  let usd;
+  if(quote==="USD") usd=raw;
+  else if(base==="USD") usd=raw/close;
+  else{
+    const cross=+plCross.value;
+    if(!cross) return;
+    usd=raw/cross;
+  }
+  plResult.innerText=`P/L: $${usd.toFixed(2)}`;
 }
 
-/* ================================
-   LIVE UPDATE
-================================ */
-document.querySelectorAll('input,select')
-  .forEach(el => el.addEventListener('input', updateAll));
+document.querySelectorAll("input,select")
+.forEach(e=>e.addEventListener("input",()=>{
+  calcPipDiff();
+  calculateMargin();
+  calculatePip();
+  calculatePL();
+}));
 </script>
 
+</body>
+</html>
