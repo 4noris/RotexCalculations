@@ -192,9 +192,15 @@
 </footer>
 <script>
 /* ================================
-   CORE HELPERS (SINGLE SOURCE)
+   INSTRUMENT CLASSIFICATION
 ================================ */
-function detectPipSize(pair) {
+function getInstrumentType(pair) {
+  pair = pair.toUpperCase();
+  if (pair.includes('BTC') || pair.includes('ETH')) return 'CRYPTO';
+  return 'FOREX';
+}
+
+function getPipSize(pair) {
   return pair.slice(3) === 'JPY' ? 0.01 : 0.0001;
 }
 
@@ -205,7 +211,7 @@ function contractSize(lot) {
   return 0;
 }
 
-function updateAll(){
+function updateAll() {
   calcPipDiff();
   calculateMargin();
   calculatePipAndSpread();
@@ -213,35 +219,44 @@ function updateAll(){
 }
 
 /* ================================
-   PIP DIFFERENCE
+   PIP / PRICE DIFFERENCE
 ================================ */
-function calcPipDiff(){
+function calcPipDiff() {
+  const pair = pipPair.value.toUpperCase();
   const open = parseFloat(pipOpen.value);
   const close = parseFloat(pipClose.value);
-  const pair = pipPair.value.toUpperCase();
 
-  if(isNaN(open) || isNaN(close)) {
+  if (isNaN(open) || isNaN(close)) {
     pipDiffResult.innerText = '⚠️ Enter both prices';
     return;
   }
 
-  const pips = (close - open) / detectPipSize(pair);
-  pipDiffResult.innerText = `Pip Difference: ${pips.toFixed(2)} pips`;
+  const type = getInstrumentType(pair);
+  const diff = close - open;
+
+  if (type === 'CRYPTO') {
+    pipDiffResult.innerText =
+      `Price Difference: ${diff.toFixed(3)} USD`;
+  } else {
+    const pips = diff / getPipSize(pair);
+    pipDiffResult.innerText =
+      `Pip Difference: ${pips.toFixed(2)} pips`;
+  }
 }
 
 /* ================================
-   MARGIN CALCULATOR (FIXED)
+   MARGIN (MT5 STANDARD)
 ================================ */
-function calculateMargin(){
+function calculateMargin() {
   const pair = document.getElementById('pair').value.toUpperCase();
-  const lotType = lotTypeEl.value;
-  const lots = parseFloat(lotsEl.value);
-  const price = parseFloat(priceEl.value);
-  const leverage = parseFloat(leverageEl.value);
-  const cross = parseFloat(crossRate.value);
-  const equity = parseFloat(equityEl.value);
+  const lotType = document.getElementById('lotType').value;
+  const lots = parseFloat(document.getElementById('lots').value);
+  const price = parseFloat(document.getElementById('price').value);
+  const leverage = parseFloat(document.getElementById('leverage').value);
+  const cross = parseFloat(document.getElementById('crossRate').value);
+  const equity = parseFloat(document.getElementById('equity').value);
 
-  if(!pair || isNaN(lots) || isNaN(leverage)) return;
+  if (!pair || isNaN(lots) || isNaN(leverage)) return;
 
   const base = pair.slice(0,3);
   const quote = pair.slice(3);
@@ -251,12 +266,10 @@ function calculateMargin(){
 
   if (quote === 'USD') {
     marginUSD = (lots * contract * price) / leverage;
-  }
-  else if (base === 'USD') {
+  } else if (base === 'USD') {
     marginUSD = (lots * contract) / leverage;
-  }
-  else {
-    if (!cross || cross <= 0) {
+  } else {
+    if (!cross) {
       marginUSDResult.innerText = '⚠️ Enter USD/QUOTE rate';
       return;
     }
@@ -267,52 +280,49 @@ function calculateMargin(){
   blockedResult.innerText = `Blocked Margin: $${marginUSD.toFixed(2)}`;
 
   if (equity > 0) {
-    const ml = (equity / marginUSD) * 100;
-    marginLevelResult.innerText = `Margin Level: ${ml.toFixed(2)}%`;
+    marginLevelResult.innerText =
+      `Margin Level: ${((equity / marginUSD) * 100).toFixed(2)}%`;
   }
 }
 
 /* ================================
-   PIP VALUE + SPREAD (CORRECT)
+   PIP VALUE (FOREX ONLY)
 ================================ */
-function calculatePipAndSpread(){
+function calculatePipAndSpread() {
   const pair = pvPair.value.toUpperCase();
+  if (getInstrumentType(pair) === 'CRYPTO') {
+    pipValueResult.innerText = 'N/A for Crypto';
+    spreadCostResult.innerText = 'Use price difference';
+    return;
+  }
+
   const lotType = pvLot.value;
   const price = parseFloat(pvPrice.value);
   const cross = parseFloat(pvCross.value);
   const spread = parseFloat(pvSpread.value);
   const lots = parseFloat(pvSpreadLots.value) || 1;
 
-  if(!pair) return;
-
-  const pip = detectPipSize(pair);
+  const pip = getPipSize(pair);
   const contract = contractSize(lotType);
   const base = pair.slice(0,3);
   const quote = pair.slice(3);
 
   let pipUSD;
 
-  if (quote === 'USD') {
-    pipUSD = contract * pip;
-  }
-  else if (base === 'USD') {
-    if (!price) return;
-    pipUSD = (contract * pip) / price;
-  }
-  else {
-    if (!cross) return;
-    pipUSD = (contract * pip) / cross;
-  }
+  if (quote === 'USD') pipUSD = contract * pip;
+  else if (base === 'USD') pipUSD = (contract * pip) / price;
+  else pipUSD = (contract * pip) / cross;
 
-  pipValueResult.innerText = `Pip Value (1 lot): $${pipUSD.toFixed(5)}`;
+  pipValueResult.innerText =
+    `Pip Value (1 lot): $${pipUSD.toFixed(5)}`;
   spreadCostResult.innerText =
     `Spread Cost: $${(pipUSD * spread * lots).toFixed(2)}`;
 }
 
 /* ================================
-   PROFIT / LOSS (BROKER FORMULA)
+   PROFIT / LOSS (TRUE MT5 LOGIC)
 ================================ */
-function calculatePL(){
+function calculatePL() {
   const pair = plPair.value.toUpperCase();
   const lotType = plLotType.value;
   const lots = parseFloat(plLots.value);
@@ -321,44 +331,27 @@ function calculatePL(){
   const type = plType.value;
   const cross = parseFloat(plCross.value);
 
-  if(!pair || isNaN(open) || isNaN(close)) return;
+  if (isNaN(open) || isNaN(close)) return;
 
-  const base = pair.slice(0,3);
-  const quote = pair.slice(3);
   const contract = contractSize(lotType);
-
-  let rawPL = (close - open) * contract * lots;
-  if (type === 'sell') rawPL *= -1;
+  let raw = (close - open) * contract * lots;
+  if (type === 'sell') raw *= -1;
 
   let usdPL;
 
-  if (quote === 'USD') {
-    usdPL = rawPL;
-  }
-  else if (base === 'USD') {
-    usdPL = rawPL / close;
-  }
-  else {
-    if (!cross) {
-      plResult.innerText = '⚠️ Enter USD/QUOTE rate';
-      return;
-    }
-    usdPL = rawPL / cross;
-  }
+  const base = pair.slice(0,3);
+  const quote = pair.slice(3);
+
+  if (quote === 'USD') usdPL = raw;
+  else if (base === 'USD') usdPL = raw / close;
+  else usdPL = raw / cross;
 
   plResult.innerText = `Profit/Loss (USD): $${usdPL.toFixed(2)}`;
 }
 
 /* ================================
-   AUTO UPDATE
+   LIVE UPDATE
 ================================ */
 document.querySelectorAll('input,select')
   .forEach(el => el.addEventListener('input', updateAll));
 </script>
-
-</script>
-</body>
-</html>
-
-
-
