@@ -2,41 +2,48 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Rotex Trade Summary Calculator</title>
+<title>Rotex Full Trading Calculator</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
 *{box-sizing:border-box}
 body{
   margin:0;
-  padding:20px;
+  padding:16px;
   background:#000;
   color:#fff;
-  font-family:Arial, Helvetica, sans-serif;
+  font-family:Arial,Helvetica,sans-serif;
 }
 h1{
   text-align:center;
-  font-size:28px;
-  margin-bottom:20px;
+  margin-bottom:16px;
+  font-size:26px;
   background:linear-gradient(90deg,#5A378A,#EE7448);
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
 }
-.container{
-  max-width:520px;
+.dashboard{
+  max-width:600px;
   margin:0 auto;
-  padding:20px;
-  border-radius:14px;
+}
+.card{
   background:rgba(255,255,255,0.05);
   border:1px solid rgba(255,255,255,0.2);
+  border-radius:14px;
+  padding:16px;
+  margin-bottom:16px;
+}
+.card h3{
+  margin:0 0 10px;
+  font-size:18px;
 }
 label{
   display:block;
-  margin-top:12px;
+  margin-top:10px;
   font-size:13px;
   opacity:.85;
 }
-input{
+input,select{
   width:100%;
   margin-top:6px;
   padding:9px;
@@ -47,109 +54,158 @@ input{
   font-size:14px;
 }
 .result{
-  margin-top:16px;
-  padding:12px;
-  border-radius:10px;
+  margin-top:12px;
+  padding:10px;
   background:#111;
+  border-radius:8px;
   border:1px solid rgba(255,255,255,0.3);
   font-weight:600;
   font-size:14px;
   line-height:1.6;
 }
 .small{
-  margin-top:8px;
   font-size:12px;
   color:#aaa;
-  text-align:center;
+  margin-top:6px;
 }
 </style>
 </head>
 
 <body>
 
-<h1>ROTEX TRADE SUMMARY</h1>
+<h1>ROTEX FULL TRADING CALCULATOR</h1>
 
-<div class="container">
+<div class="dashboard">
 
-  <label>Symbol (e.g. EURUSD, BTCUSD)</label>
-  <input id="symbol" value="EURUSD">
+<!-- TRADE INPUT -->
+<div class="card">
+<h3>Trade Setup</h3>
 
-  <label>Lots</label>
-  <input id="lots" type="number" step="0.01" value="1">
+<label>Symbol</label>
+<input id="symbol" value="EURUSD">
 
-  <label>Open Price</label>
-  <input id="open" type="number" step="0.00001">
+<label>Instrument Type</label>
+<select id="instrument">
+  <option value="forex">Forex</option>
+  <option value="crypto">Crypto</option>
+</select>
 
-  <label>Close Price</label>
-  <input id="close" type="number" step="0.00001">
+<label>Lot Size</label>
+<input id="lots" type="number" step="0.01" value="1">
 
-  <label>Commission Rate</label>
-  <input id="commission" type="number" step="0.01" value="0">
+<label>Contract Size</label>
+<input id="contract" type="number" value="100000">
 
-  <label>Swap Rate (per day)</label>
-  <input id="swap" type="number" step="0.0001" value="0">
+<label>Open Price</label>
+<input id="open" type="number" step="0.00001">
 
-  <label>Days Held</label>
-  <input id="days" type="number" value="1">
+<label>Close / Market Price</label>
+<input id="close" type="number" step="0.00001">
 
-  <div class="result" id="output">
-    Enter values to see trade summary
-  </div>
+<label>Digits (price precision)</label>
+<select id="digits">
+  <option value="5">5 (EURUSD)</option>
+  <option value="3">3 (JPY pairs)</option>
+  <option value="2">2 (Crypto / Metals)</option>
+</select>
 
-  <div class="small">
-    Forex: commission as decimal (e.g. 0.0002)<br>
-    Crypto: commission as % (e.g. 0.1)
-  </div>
+</div>
+
+<!-- COSTS -->
+<div class="card">
+<h3>Costs</h3>
+
+<label>Commission</label>
+<input id="commission" type="number" step="0.01" value="0">
+
+<label>Swap Rate (per day)</label>
+<input id="swap" type="number" step="0.0001" value="0">
+
+<label>Days Held</label>
+<input id="days" type="number" value="1">
+
+</div>
+
+<!-- MARGIN -->
+<div class="card">
+<h3>Margin</h3>
+
+<label>Leverage (e.g. 100 = 1:100)</label>
+<input id="leverage" type="number" value="100">
+
+<label>Account Equity (USD)</label>
+<input id="equity" type="number" value="1000">
+
+</div>
+
+<!-- RESULTS -->
+<div class="card">
+<h3>Results</h3>
+<div class="result" id="output">Enter values to calculate</div>
+</div>
 
 </div>
 
 <script>
 /* ================================
-   CORE LOGIC
+   CORE UTILITIES
 ================================ */
 
-function isCrypto(symbol){
-  symbol = symbol.toUpperCase();
-  return symbol.includes("BTC") || symbol.includes("ETH");
+function smallestMovement(digits){
+  return Math.pow(10,-digits);
 }
 
-function contractSize(){
-  return 100000; // standard lot
+function isCrypto(){
+  return instrument.value === "crypto";
 }
 
-function update(){
-  const symbol = document.getElementById("symbol").value.toUpperCase();
-  const lots = parseFloat(document.getElementById("lots").value);
-  const open = parseFloat(document.getElementById("open").value);
-  const close = parseFloat(document.getElementById("close").value);
-  const commissionRate = parseFloat(document.getElementById("commission").value);
-  const swapRate = parseFloat(document.getElementById("swap").value);
-  const days = parseInt(document.getElementById("days").value);
+/* ================================
+   MAIN CALCULATION
+================================ */
+function calculate(){
+  const lots = parseFloat(lotsInput.value);
+  const contractSize = parseFloat(contract.value);
+  const open = parseFloat(openInput.value);
+  const close = parseFloat(closeInput.value);
+  const digits = parseInt(digitsInput.value);
+  const commissionRate = parseFloat(commission.value);
+  const swapRate = parseFloat(swap.value);
+  const days = parseInt(days.value);
+  const leverage = parseFloat(leverageInput.value);
+  const equity = parseFloat(equityInput.value);
 
   if(isNaN(open) || isNaN(close)) return;
 
-  const cs = contractSize();
+  const point = smallestMovement(digits);
+
+  /* Notional */
+  const notional = close * contractSize * lots;
 
   /* Gross P/L */
-  const grossPL = (close - open) * cs * lots;
+  const grossPL = (close - open) * contractSize * lots;
 
   /* Commission */
   let commissionCost = 0;
   if(commissionRate > 0){
-    if(isCrypto(symbol)){
-      commissionCost = close * cs * lots * (commissionRate / 100);
-    } else {
-      commissionCost = close * cs * lots * commissionRate;
-    }
+    commissionCost = isCrypto()
+      ? close * contractSize * lots * (commissionRate / 100)
+      : close * contractSize * lots * commissionRate;
   }
 
   /* Swap */
-  const swapCost = swapRate * lots * days;
+  const swapCost = point * contractSize * lots * swapRate * days;
+
+  /* Margin */
+  const margin = notional / leverage;
+  const marginLevel = equity > 0 ? (equity / margin) * 100 : 0;
 
   /* Net */
   const netPL = grossPL - commissionCost - swapCost;
 
-  document.getElementById("output").innerHTML =
+  output.innerHTML =
+    "Notional Value: $" + notional.toFixed(2) + "<br>" +
+    "Margin Required: $" + margin.toFixed(2) + "<br>" +
+    "Margin Level: " + marginLevel.toFixed(2) + "%<br><br>" +
     "Gross P/L: $" + grossPL.toFixed(2) + "<br>" +
     "Commission: $" + commissionCost.toFixed(2) + "<br>" +
     "Swap: $" + swapCost.toFixed(2) + "<br>" +
@@ -157,9 +213,24 @@ function update(){
     "NET RESULT: $" + netPL.toFixed(2);
 }
 
-/* Live updates */
-document.querySelectorAll("input").forEach(el=>{
-  el.addEventListener("input", update);
+/* ================================
+   LIVE UPDATE
+================================ */
+const lotsInput = document.getElementById("lots");
+const contract = document.getElementById("contract");
+const openInput = document.getElementById("open");
+const closeInput = document.getElementById("close");
+const digitsInput = document.getElementById("digits");
+const commission = document.getElementById("commission");
+const swap = document.getElementById("swap");
+const days = document.getElementById("days");
+const leverageInput = document.getElementById("leverage");
+const equityInput = document.getElementById("equity");
+const instrument = document.getElementById("instrument");
+const output = document.getElementById("output");
+
+document.querySelectorAll("input,select").forEach(el=>{
+  el.addEventListener("input", calculate);
 });
 </script>
 
