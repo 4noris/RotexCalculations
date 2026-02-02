@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Rotex Full Trading Calculator</title>
+<title>Rotex Formula Calculator</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
@@ -16,52 +16,50 @@ body{
 }
 h1{
   text-align:center;
-  margin-bottom:16px;
-  font-size:26px;
+  margin-bottom:18px;
   background:linear-gradient(90deg,#5A378A,#EE7448);
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
 }
-.dashboard{
-  max-width:600px;
-  margin:0 auto;
-}
-.card{
+.box{
+  max-width:560px;
+  margin:14px auto;
+  padding:14px;
   background:rgba(255,255,255,0.05);
   border:1px solid rgba(255,255,255,0.2);
   border-radius:14px;
-  padding:16px;
-  margin-bottom:16px;
 }
-.card h3{
-  margin:0 0 10px;
-  font-size:18px;
+.box h3{
+  margin:0 0 8px;
 }
 label{
   display:block;
-  margin-top:10px;
+  margin-top:8px;
   font-size:13px;
   opacity:.85;
 }
-input,select{
+input,select,button{
   width:100%;
-  margin-top:6px;
-  padding:9px;
+  margin-top:5px;
+  padding:8px;
   background:#111;
   color:#fff;
   border:1px solid rgba(255,255,255,0.3);
   border-radius:6px;
-  font-size:14px;
+}
+button{
+  margin-top:10px;
+  cursor:pointer;
+  background:#1c1c1c;
+  font-weight:600;
 }
 .result{
-  margin-top:12px;
+  margin-top:10px;
   padding:10px;
   background:#111;
   border-radius:8px;
   border:1px solid rgba(255,255,255,0.3);
   font-weight:600;
-  font-size:14px;
-  line-height:1.6;
 }
 .small{
   font-size:12px;
@@ -73,165 +71,133 @@ input,select{
 
 <body>
 
-<h1>ROTEX FULL TRADING CALCULATOR</h1>
+<h1>ROTEX FORMULA CALCULATOR</h1>
 
-<div class="dashboard">
+<!-- NOTIONAL VALUE -->
+<div class="box">
+<h3>Notional Value (USD)</h3>
+<label>Price</label><input id="nv_price">
+<label>Lot Size</label><input id="nv_lots" value="1">
+<label>Contract Size</label><input id="nv_contract" value="100000">
+<label>Conversion Rate</label><input id="nv_conv" value="1">
+<button onclick="calcNotional()">Calculate</button>
+<div class="result" id="nv_res">-</div>
+</div>
 
-<!-- TRADE INPUT -->
-<div class="card">
-<h3>Trade Setup</h3>
+<!-- LEVERAGE -->
+<div class="box">
+<h3>Leverage</h3>
+<label>Market Price</label><input id="lev_price">
+<label>Lot Size</label><input id="lev_lots" value="1">
+<label>Contract Size</label><input id="lev_contract" value="100000">
+<label>Blocked Margin</label><input id="lev_margin">
+<button onclick="calcLeverage()">Calculate</button>
+<div class="result" id="lev_res">-</div>
+</div>
 
-<label>Symbol</label>
-<input id="symbol" value="EURUSD">
+<!-- POINT VALUE PER LOT -->
+<div class="box">
+<h3>Point Value per Lot</h3>
+<label>Digits</label><input id="pvl_digits" value="5">
+<label>Contract Size</label><input id="pvl_contract" value="100000">
+<label>Conversion Rate</label><input id="pvl_conv" value="1">
+<button onclick="calcPVLot()">Calculate</button>
+<div class="result" id="pvl_res">-</div>
+</div>
 
-<label>Instrument Type</label>
-<select id="instrument">
+<!-- POINT VALUE -->
+<div class="box">
+<h3>Point Value</h3>
+<label>Digits</label><input id="pv_digits" value="5">
+<label>Lot Size</label><input id="pv_lots" value="1">
+<label>Contract Size</label><input id="pv_contract" value="100000">
+<label>Conversion Rate</label><input id="pv_conv" value="1">
+<button onclick="calcPV()">Calculate</button>
+<div class="result" id="pv_res">-</div>
+</div>
+
+<!-- COMMISSION PER MILLION -->
+<div class="box">
+<h3>Commission per Million</h3>
+<label>Notional Value (USD)</label><input id="cpm_notional">
+<label>Amount per Million</label><input id="cpm_amt">
+<button onclick="calcCPM()">Calculate</button>
+<div class="result" id="cpm_res">-</div>
+</div>
+
+<!-- SWAP -->
+<div class="box">
+<h3>Swap</h3>
+<label>Digits</label><input id="sw_digits" value="5">
+<label>Contract Size</label><input id="sw_contract" value="100000">
+<label>Lot Size</label><input id="sw_lots" value="1">
+<label>Swap Rate</label><input id="sw_rate">
+<label>Days</label><input id="sw_days" value="1">
+<button onclick="calcSwap()">Calculate</button>
+<div class="result" id="sw_res">-</div>
+</div>
+
+<!-- COMMISSION -->
+<div class="box">
+<h3>Commission</h3>
+<label>Close Price</label><input id="com_price">
+<label>Contract Size</label><input id="com_contract" value="1">
+<label>Lot Size</label><input id="com_lots" value="1">
+<label>Commission Rate (Forex = decimal | Crypto = %)</label><input id="com_rate">
+<label>Instrument</label>
+<select id="com_type">
   <option value="forex">Forex</option>
   <option value="crypto">Crypto</option>
 </select>
-
-<label>Lot Size</label>
-<input id="lots" type="number" step="0.01" value="1">
-
-<label>Contract Size</label>
-<input id="contract" type="number" value="100000">
-
-<label>Open Price</label>
-<input id="open" type="number" step="0.00001">
-
-<label>Close / Market Price</label>
-<input id="close" type="number" step="0.00001">
-
-<label>Digits (price precision)</label>
-<select id="digits">
-  <option value="5">5 (EURUSD)</option>
-  <option value="3">3 (JPY pairs)</option>
-  <option value="2">2 (Crypto / Metals)</option>
-</select>
-
+<button onclick="calcCommission()">Calculate</button>
+<div class="result" id="com_res">-</div>
 </div>
 
-<!-- COSTS -->
-<div class="card">
-<h3>Costs</h3>
-
-<label>Commission</label>
-<input id="commission" type="number" step="0.01" value="0">
-
-<label>Swap Rate (per day)</label>
-<input id="swap" type="number" step="0.0001" value="0">
-
-<label>Days Held</label>
-<input id="days" type="number" value="1">
-
-</div>
-
-<!-- MARGIN -->
-<div class="card">
-<h3>Margin</h3>
-
-<label>Leverage (e.g. 100 = 1:100)</label>
-<input id="leverage" type="number" value="100">
-
-<label>Account Equity (USD)</label>
-<input id="equity" type="number" value="1000">
-
-</div>
-
-<!-- RESULTS -->
-<div class="card">
-<h3>Results</h3>
-<div class="result" id="output">Enter values to calculate</div>
-</div>
-
+<div class="box small">
+Important Note:<br>
+• Multiply if USD is Quote (e.g. NZDUSD)<br>
+• Divide if USD is Base (e.g. USDJPY)
 </div>
 
 <script>
-/* ================================
-   CORE UTILITIES
-================================ */
+function point(d){ return Math.pow(10,-d); }
 
-function smallestMovement(digits){
-  return Math.pow(10,-digits);
+function calcNotional(){
+  nv_res.innerText =
+    (nv_price.value * nv_lots.value * nv_contract.value * nv_conv.value).toFixed(2);
 }
 
-function isCrypto(){
-  return instrument.value === "crypto";
+function calcLeverage(){
+  lev_res.innerText =
+    (lev_price.value * lev_lots.value * lev_contract.value / lev_margin.value).toFixed(2);
 }
 
-/* ================================
-   MAIN CALCULATION
-================================ */
-function calculate(){
-  const lots = parseFloat(lotsInput.value);
-  const contractSize = parseFloat(contract.value);
-  const open = parseFloat(openInput.value);
-  const close = parseFloat(closeInput.value);
-  const digits = parseInt(digitsInput.value);
-  const commissionRate = parseFloat(commission.value);
-  const swapRate = parseFloat(swap.value);
-  const days = parseInt(days.value);
-  const leverage = parseFloat(leverageInput.value);
-  const equity = parseFloat(equityInput.value);
-
-  if(isNaN(open) || isNaN(close)) return;
-
-  const point = smallestMovement(digits);
-
-  /* Notional */
-  const notional = close * contractSize * lots;
-
-  /* Gross P/L */
-  const grossPL = (close - open) * contractSize * lots;
-
-  /* Commission */
-  let commissionCost = 0;
-  if(commissionRate > 0){
-    commissionCost = isCrypto()
-      ? close * contractSize * lots * (commissionRate / 100)
-      : close * contractSize * lots * commissionRate;
-  }
-
-  /* Swap */
-  const swapCost = point * contractSize * lots * swapRate * days;
-
-  /* Margin */
-  const margin = notional / leverage;
-  const marginLevel = equity > 0 ? (equity / margin) * 100 : 0;
-
-  /* Net */
-  const netPL = grossPL - commissionCost - swapCost;
-
-  output.innerHTML =
-    "Notional Value: $" + notional.toFixed(2) + "<br>" +
-    "Margin Required: $" + margin.toFixed(2) + "<br>" +
-    "Margin Level: " + marginLevel.toFixed(2) + "%<br><br>" +
-    "Gross P/L: $" + grossPL.toFixed(2) + "<br>" +
-    "Commission: $" + commissionCost.toFixed(2) + "<br>" +
-    "Swap: $" + swapCost.toFixed(2) + "<br>" +
-    "————————————<br>" +
-    "NET RESULT: $" + netPL.toFixed(2);
+function calcPVLot(){
+  pvl_res.innerText =
+    (point(pvl_digits.value) * pvl_contract.value * pvl_conv.value).toFixed(5);
 }
 
-/* ================================
-   LIVE UPDATE
-================================ */
-const lotsInput = document.getElementById("lots");
-const contract = document.getElementById("contract");
-const openInput = document.getElementById("open");
-const closeInput = document.getElementById("close");
-const digitsInput = document.getElementById("digits");
-const commission = document.getElementById("commission");
-const swap = document.getElementById("swap");
-const days = document.getElementById("days");
-const leverageInput = document.getElementById("leverage");
-const equityInput = document.getElementById("equity");
-const instrument = document.getElementById("instrument");
-const output = document.getElementById("output");
+function calcPV(){
+  pv_res.innerText =
+    (point(pv_digits.value) * pv_lots.value * pv_contract.value * pv_conv.value).toFixed(5);
+}
 
-document.querySelectorAll("input,select").forEach(el=>{
-  el.addEventListener("input", calculate);
-});
+function calcCPM(){
+  cpm_res.innerText =
+    (cpm_notional.value * (cpm_amt.value / 1000000)).toFixed(2);
+}
+
+function calcSwap(){
+  sw_res.innerText =
+    (point(sw_digits.value) * sw_contract.value * sw_lots.value * sw_rate.value * sw_days.value).toFixed(5);
+}
+
+function calcCommission(){
+  let rate = com_rate.value;
+  if(com_type.value === "crypto") rate /= 100;
+  com_res.innerText =
+    (com_price.value * com_contract.value * com_lots.value * rate).toFixed(2);
+}
 </script>
 
 </body>
