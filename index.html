@@ -103,6 +103,14 @@
     <input id="pipOpen" type="number" step="0.00001">
     <label>Closing Price</label>
     <input id="pipClose" type="number" step="0.00001">
+   <label>Digits (price precision)</label>
+  <select id="pipDigits">
+    <option value="5">5 (EURUSD)</option>
+    <option value="3">3 (JPY pairs)</option>
+    <option value="2">2 (BTC, XAU)</option>
+    <option value="1">1</option>
+  </select>
+
     <div class="result" id="pipDiffResult">Pip Difference: -</div>
     <div class="small">Note: JPY pairs use pip = 0.01; other pairs use pip = 0.0001.</div>
   </div>
@@ -218,32 +226,31 @@ function updateAll() {
   calculatePL();
 }
 
-/* ================================
-   PIP / PRICE DIFFERENCE
-================================ */
 function calcPipDiff() {
   const pair = pipPair.value.toUpperCase();
   const open = parseFloat(pipOpen.value);
   const close = parseFloat(pipClose.value);
+  const digits = parseInt(document.getElementById('pipDigits').value);
 
-  if (isNaN(open) || isNaN(close)) {
-    pipDiffResult.innerText = '⚠️ Enter both prices';
+  if (isNaN(open) || isNaN(close) || isNaN(digits)) {
+    pipDiffResult.innerText = '⚠️ Enter prices and digits';
     return;
   }
 
-  const type = getInstrumentType(pair);
-  const diff = close - open;
+  const priceDiff = close - open;
 
-  if (type === 'CRYPTO') {
-    pipDiffResult.innerText =
-      `Price Difference: ${diff.toFixed(3)} USD`;
-  } else {
-    const pips = diff / getPipSize(pair);
-    pipDiffResult.innerText =
-      `Pip Difference: ${pips.toFixed(2)} pips`;
-  }
+  // Market-standard definitions
+  const point = Math.pow(10, -digits);
+  const pip = (digits === 3 || digits === 5) ? point * 10 : point;
+
+  const points = priceDiff / point;
+  const pips = priceDiff / pip;
+
+  pipDiffResult.innerText =
+    `Price Diff: ${priceDiff.toFixed(digits)} | ` +
+    `Points: ${points.toFixed(1)} | ` +
+    `Pips: ${pips.toFixed(2)}`;
 }
-
 /* ================================
    MARGIN (MT5 STANDARD)
 ================================ */
@@ -355,3 +362,4 @@ function calculatePL() {
 document.querySelectorAll('input,select')
   .forEach(el => el.addEventListener('input', updateAll));
 </script>
+
