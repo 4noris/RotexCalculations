@@ -117,18 +117,6 @@ button{
 <div class="result" id="pv_result">-</div>
 </div>
 
-<!-- SWAP -->
-<div class="box">
-<h3>Swap</h3>
-<input id="sw_move" placeholder="Smallest Movement">
-<input id="sw_contract" placeholder="Contract Size">
-<input id="sw_lot" placeholder="Lot Size">
-<input id="sw_rate" placeholder="Swap Rate">
-<input id="sw_days" placeholder="Days">
-<button onclick="calcSwap()">Calculate</button>
-<div class="result" id="sw_result">-</div>
-</div>
-
 <!-- COMMISSION -->
 <div class="box">
 <h3>Commission</h3>
@@ -189,15 +177,6 @@ function calcPV(){
      Number(pv_conv.value)).toFixed(5);
 }
 
-function calcSwap(){
-  sw_result.innerText =
-    (Number(sw_move.value) *
-     Number(sw_contract.value) *
-     Number(sw_lot.value) *
-     Number(sw_rate.value) *
-     Number(sw_days.value)).toFixed(5);
-}
-
 function calcCommission(){
   let rate = Number(com_rate.value);
   if(com_type.value === "crypto") rate /= 100;
@@ -212,3 +191,4 @@ function calcCommission(){
 
 </body>
 </html>
+
